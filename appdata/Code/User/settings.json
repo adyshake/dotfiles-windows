@@ -4,5 +4,6 @@
     "java.errors.incompleteClasspath.severity": "ignore",
     "editor.fontSize": 13,
     "terminal.integrated.fontSize": 13,
-    "editor.fontFamily": "'Source Code Pro', Consolas, 'Courier New', monospace"
+    "editor.fontFamily": "'Source Code Pro', Consolas, 'Courier New', monospace",
+    "editor.rulers": [80,120]
 }
