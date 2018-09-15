@@ -1,0 +1,12 @@
+dt=cd %UserProfile%\Desktop
+docs=cd %UserProfile%\Documents
+dl=cd %UserProfile%\Downloads
+~=cd %UserProfile%
+
+..=cd ..
+...=cd ..\..
+....=cd ..\..\..
+.....=cd ..\..\..\..
+......=cd ..\..\..\..\..
+
+psh=powershell Start-Process powershell -Verb runAs -ArgumentList @('-NoExit', '-Command "cd %UserProfile%"')

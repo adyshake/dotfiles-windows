@@ -65,6 +65,8 @@ choco install vlc                   --limit-output
 
 choco install qbittorrent           --limit-output
 
+choco install rufus                 --limit-output
+
 Refresh-Environment
 
 '''

@@ -5,9 +5,12 @@ New-Item $profileDir -ItemType Directory -Force -ErrorAction SilentlyContinue
 New-Item $componentDir -ItemType Directory -Force -ErrorAction SilentlyContinue
 
 Copy-Item -Path ./*.ps1 -Destination $profileDir -Exclude "bootstrap.ps1"
+Copy-Item -Path ./macros.doskey -Destination $profileDir
 Copy-Item -Path ./components/** -Destination $componentDir -Include **
 Copy-Item -Path ./home/** -Destination $home -Include **
 Copy-Item -Path ./appdata/** -Destination $env:APPDATA -Include ** -Force
+
+Set-ItemProperty "HKCU:\Software\Microsoft\Command Processor" "AutoRun" "Doskey /MacroFile=`"$profileDir\macros.doskey`""
 
 $fontCSIDL = 0x14
 $objShell = New-Object -ComObject Shell.Application
