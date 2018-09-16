@@ -33,9 +33,13 @@ function System-Update() {
 # Reload the Shell
 function Reload-Powershell {
     $newProcess = new-object System.Diagnostics.ProcessStartInfo "PowerShell";
-    $newProcess.Arguments = "-nologo";
+    $newProcess.Arguments = "-NoLogo";
     [System.Diagnostics.Process]::Start($newProcess);
     exit
+}
+
+function New-PowershellAdmin {
+    Start-Process powershell -Verb runAs -ArgumentList @("-NoExit", "-Command `"cd $(([string](Get-Location)).TrimEnd('\'))`"")
 }
 
 # Download a file into a temporary folder

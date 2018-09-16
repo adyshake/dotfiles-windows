@@ -59,6 +59,7 @@ choco pin add --name GoogleChrome   --limit-output
 
 choco install vscode                --limit-output
 choco pin add --name vscode         --limit-output
+Refresh-Environment
 code --install-extension stkb.rewrap
 
 choco install vlc                   --limit-output
