@@ -3,6 +3,9 @@
 Thumbs.db
 ehthumbs.db
 
+#IDEs
+.vscode/
+
 # Folder config file
 Desktop.ini
 
