@@ -491,6 +491,21 @@ Set-ItemProperty $(Join-Path $diskCleanupRegPath "Windows Upgrade Log Files"    
 Remove-Variable diskCleanupRegPath
 
 ###############################################################################
+### Fonts                                                                     #
+###############################################################################
+
+$fontCSIDL = 0x14
+$objShell = New-Object -ComObject Shell.Application
+$objFolder = $objShell.Namespace($fontCSIDL)
+$fontPath = Join-Path (Split-Path -parent $profile) "fonts\*.ttf"
+Get-ChildItem $fontPath | ForEach-Object{ $objFolder.CopyHere($_.FullName) }
+
+Remove-Variable fontPath
+Remove-Variable objFolder
+Remove-Variable objShell
+Remove-Variable fontCSIDL
+
+###############################################################################
 ### PowerShell Console                                                        #
 ###############################################################################
 Write-Host "Configuring Console..." -ForegroundColor "Yellow"

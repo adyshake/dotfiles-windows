@@ -39,7 +39,7 @@ function Reload-Powershell {
 }
 
 function New-PowershellAdmin {
-    Start-Process powershell -Verb runAs -ArgumentList @("-NoExit", "-Command `"cd $(([string](Get-Location)).TrimEnd('\'))`"")
+    Start-Process powershell -Verb runAs -ArgumentList @("-NoExit", "-Command `"cd `'$(([string](Get-Location)).TrimEnd('\'))`'`"")
 }
 
 # Download a file into a temporary folder
