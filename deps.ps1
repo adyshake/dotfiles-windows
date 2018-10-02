@@ -37,12 +37,17 @@ scoop install curl
 scoop install git
 scoop install grep
 scoop install wget
+scoop install ruby
+scoop install msys2
 #scoop install vim
 #scoop install openssh
 #scoop install nvm
-#scoop install ruby
 
 Refresh-Environment
+
+### Set up Ruby and bundler
+ridk install
+gem install bundler
 
 ### Chocolatey
 Write-Host "Installing Desktop Utilities..." -ForegroundColor "Yellow"
@@ -67,6 +72,8 @@ choco install vlc                   --limit-output
 choco install qbittorrent           --limit-output
 
 choco install rufus                 --limit-output
+
+choco install winrar                 --limit-output
 
 Refresh-Environment
 
