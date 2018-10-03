@@ -18,16 +18,22 @@ function sudo() {
 
 # System Update - Update RubyGems, NPM, and their installed packages
 function System-Update() {
-    Install-WindowsUpdate -IgnoreUserInput -IgnoreReboot -AcceptAll
-    Update-Module
-    Update-Help -Force
-    scoop update
-    '''
-    gem update --system
-    gem update
-    npm install npm -g
-    npm update -g
-    '''
+
+    if (!(Verify-Elevated)) {
+        Write-Host "Need to be elevated to run this command" -ForegroundColor "Yellow"
+    }
+    else {
+        Install-WindowsUpdate -IgnoreUserInput -IgnoreReboot -AcceptAll
+        Update-Module
+        scoop update
+        '''
+        Update-Help -Force
+        gem update --system
+        gem update
+        npm install npm -g
+        npm update -g
+        '''
+    }
 }
 
 # Reload the Shell

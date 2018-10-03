@@ -9,4 +9,4 @@ dl=cd %UserProfile%\Downloads
 .....=cd ..\..\..\..
 ......=cd ..\..\..\..\..
 
-psh=powershell Start-Process powershell -Verb runAs -ArgumentList @('-NoExit', '-Command "cd %UserProfile%"')
+psh=powershell Start-Process powershell -Verb runAs -ArgumentList @('-NoExit', '-Command "cd ''%cd%'' "')
