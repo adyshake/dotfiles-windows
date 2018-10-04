@@ -6,7 +6,7 @@ New-Item $profileDir -ItemType Directory -Force -ErrorAction SilentlyContinue
 New-Item $componentDir -ItemType Directory -Force -ErrorAction SilentlyContinue
 
 Copy-Item -Path ./*.ps1 -Destination $profileDir -Force -Exclude "bootstrap.ps1"
-Copy-Item -Path ./*.bat -Destination $winDir -Force
+Copy-Item -Path ./psh64.exe -Destination $winDir/psh.exe -Force
 Copy-Item -Path ./macros.doskey -Destination $profileDir -Force
 Copy-Item -Path ./fonts -Destination $profileDir -Force -Recurse
 Copy-Item -Path ./components/** -Destination $componentDir -Force -Include **
