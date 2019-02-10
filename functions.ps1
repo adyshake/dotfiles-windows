@@ -26,13 +26,11 @@ function System-Update() {
         Install-WindowsUpdate -IgnoreUserInput -IgnoreReboot -AcceptAll
         Update-Module
         scoop update
-        '''
-        Update-Help -Force
-        gem update --system
-        gem update
-        npm install npm -g
-        npm update -g
-        '''
+        # Update-Help -Force
+        # gem update --system
+        # gem update
+        # npm install npm -g
+        # npm update -g
     }
 }
 
