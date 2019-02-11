@@ -1,12 +1,18 @@
 Param(
     [Parameter(Mandatory=$true)]
-    [System.IO.FileInfo]$Path
+    [System.IO.FileInfo]$path
 )
 
-$file_formats = ('*.jpg', '*.jpeg')
+$file_formats = ('*.webm', '*.mkv', '*.flv', '*.ogg', '*.ogv', '*.avi', '*.mov',
+                 '*.qt', '*.wmv', '*.amv', '*.mp4', '*.m4p', '*.m4v', '*.mpg',
+                 '*.mp2', '*.mpeg', '*.mpe', '*.mpv', '*.m2v', '*.3gp', '*.3g2')
 $suffix = "_ffmpeg"
 
-$ip_files = Get-ChildItem $Path -Recurse -Include $file_formats -Exclude $("*"+$suffix+"*")
+$ip_files = Get-ChildItem $path -Recurse -Include $file_formats -Exclude $("*"+$suffix+"*")
+if ($ip_files.Count -eq 0) {
+    Write-Host "No footage found to be compressed" -ForegroundColor Yellow
+    Return
+}
 $ip_total_size = [Math]::Round( ($ip_files | Measure-Object -Sum Length).Sum / 1GB, 2 )
 Write-Host "Footage files to be compressed:" -ForegroundColor Yellow
 $ip_files | ForEach-Object { Write-Host $_.Fullname -ForegroundColor DarkMagenta}
@@ -19,13 +25,13 @@ if ($choice -eq "y" -or $choice -eq "Y") {
         ffmpeg -i "$($_.FullName)" -hide_banner -loglevel panic "-c:v" libx264 -crf 23 "-c:a" aac -map_metadata 0 "$(Join-Path $_.Directory ($_.BaseName + $suffix + '.mp4'))"
     }
     
-    $op_files = Get-ChildItem $Path -Recurse -Include $file_formats -Filter $("*"+$suffix+"*")
+    $op_files = Get-ChildItem $path -Recurse -Include $file_formats -Filter $("*"+$suffix+"*")
     $op_total_size = [Math]::Round( ($op_files | Measure-Object -Sum Length).Sum / 1GB, 2 )
     Write-Host "Size of compressed footage is" $op_total_size "GB" -ForegroundColor Yellow
     Write-Host "Data saved around" $($ip_total_size - $op_total_size) "GB" -ForegroundColor Yellow
     
     # Make sure at least some files have been generated before entering this scary code block
-    if ($ip_files.Count -eq $op_files.Count -and $op_files.Count -gt 0) {
+    if ($ip_files.Count -eq $op_files.Count) {
         Write-Host "Verify you want to delete the following uncompressed footage files:" -ForegroundColor Yellow
         $ip_files | ForEach-Object { Write-Host $_.Fullname -ForegroundColor DarkMagenta}
         Write-Host "Delete (y/n)?" -ForegroundColor Yellow

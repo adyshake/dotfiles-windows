@@ -1,63 +1,74 @@
 Param(
     [Parameter(Mandatory=$true)]
-    [System.IO.FileInfo]$Path
+    [System.IO.FileInfo]$path
 )
 
 $file_formats = ('*.jpg', '*.jpeg')
-$suffix = "_moz"
 
-$ip_files = Get-ChildItem $Path -Recurse -Include $file_formats -Exclude $("*"+$suffix+"*")
-$ip_total_size = [Math]::Round( ($ip_files | Measure-Object -Sum Length).Sum / 1GB, 2 )
-Write-Host "Footage files to be compressed:" -ForegroundColor Yellow
+$profileDir = Split-Path -parent $profile
+$utilsDir = Join-Path $profileDir "utils"
+
+$ip_files = Get-ChildItem $path -Recurse -Include $file_formats
+if ($ip_files.Count -eq 0) {
+    Write-Host "No photos found to be compressed" -ForegroundColor Yellow
+    Return
+}
+
+$ip_total_size = [Math]::Round( ($ip_files | Measure-Object -Sum Length).Sum / 1MB, 2 )
+Write-Host "Photos to be compressed:" -ForegroundColor Yellow
 $ip_files | ForEach-Object { Write-Host $_.Fullname -ForegroundColor DarkMagenta}
-Write-Host "Size of uncompressed footage is" $ip_total_size "GB" -ForegroundColor Yellow
+Write-Host "Size of uncompressed photos is" $ip_total_size "MB" -ForegroundColor Yellow
 Write-Host "Begin conversion? (y/n)?" -ForegroundColor Yellow
+
 $choice = Read-Host
 if ($choice -eq "y" -or $choice -eq "Y") {
+    $optimized_dir_path = Join-Path $path "\optimized\"
+    New-Item $optimized_dir_path -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
     $ip_files | ForEach-Object {
         Write-Host "Now converting" $_.FullName -ForegroundColor DarkMagenta
-        ./jpegoptim.exe "$($_.FullName)" -m80
+        & "$utilsDir\jpegoptim.exe" "$($_.FullName)" -m80 -p -d "$($optimized_dir_path)\"
     }
     
-    $op_files = Get-ChildItem $Path -Recurse -Include $file_formats -Filter $("*"+$suffix+"*")
-    $op_total_size = [Math]::Round( ($op_files | Measure-Object -Sum Length).Sum / 1GB, 2 )
-    Write-Host "Size of compressed footage is" $op_total_size "GB" -ForegroundColor Yellow
-    Write-Host "Data saved around" $($ip_total_size - $op_total_size) "GB" -ForegroundColor Yellow
+    $op_files = Get-ChildItem $optimized_dir_path -Recurse -Include $file_formats
+    $op_total_size = [Math]::Round( ($op_files | Measure-Object -Sum Length).Sum / 1MB, 2 )
+    Write-Host "Size of compressed photos is" $op_total_size "MB" -ForegroundColor Yellow
+    Write-Host "Data saved around" $($ip_total_size - $op_total_size) "MB" -ForegroundColor Yellow
     
     # Make sure at least some files have been generated before entering this scary code block
-    if ($ip_files.Count -eq $op_files.Count -and $op_files.Count -gt 0) {
-        Write-Host "Verify you want to delete the following uncompressed footage files:" -ForegroundColor Yellow
+    if ($ip_files.Count -eq $op_files.Count) {
+        Write-Host "Verify you want to delete the following uncompressed photos:" -ForegroundColor Yellow
         $ip_files | ForEach-Object { Write-Host $_.Fullname -ForegroundColor DarkMagenta}
         Write-Host "Delete (y/n)?" -ForegroundColor Yellow
         $choice = Read-Host
         if ($choice -eq "y" -or $choice -eq "Y") {
             $ip_files | Remove-Item
-            Write-Host "Deleted uncompressed footage" -ForegroundColor Green
+            Write-Host "Deleted uncompressed photos" -ForegroundColor Green
         }
         else {
-            Write-Host "Skipped deleting uncompressed footage" -ForegroundColor Green
+            Write-Host "Skipped deleting uncompressed photos" -ForegroundColor Green
         }
     }
     else {
-        Write-Host "No files uncompressed files to delete" -ForegroundColor Green
+        Write-Host "No files uncompressed photos to delete" -ForegroundColor Green
     }
     if ($op_files.Count -gt 0) {
-        Write-Host "Verify you want to remove the '$($suffix)' suffix from the following compressed footage files:" -ForegroundColor Yellow
+        Write-Host "Verify you want to move the compressed photos out of the ./optimized/ dir:" -ForegroundColor Yellow
         $op_files | ForEach-Object { Write-Host $_.Fullname -ForegroundColor DarkMagenta}
-        Write-Host "Rename (y/n)?" -ForegroundColor Yellow
+        Write-Host "Move (y/n)?" -ForegroundColor Yellow
         $choice = Read-Host
         if ($choice -eq "y" -or $choice -eq "Y") {
-            $op_files | Rename-Item -NewName {$_.Name -Replace $suffix, ""}
-            Write-Host "Removed suffixes" -ForegroundColor Green
+            $op_files | Move-Item -Destination $path
+            Remove-Item $optimized_dir_path
+            Write-Host "Moved compressed photos" -ForegroundColor Green
         }
         else {
-            Write-Host "Skipped removing suffix" -ForegroundColor Green
+            Write-Host "Skipped moving compressed photos" -ForegroundColor Green
         }
     }
     else {
-        Write-Host "No suffixes to remove" -ForegroundColor Green
+        Write-Host "No photos to move" -ForegroundColor Green
     }
 }
 else {
-    Write-Host "No files converted" -ForegroundColor Green
+    Write-Host "No photos compressed" -ForegroundColor Green
 }
