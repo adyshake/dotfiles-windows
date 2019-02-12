@@ -1,0 +1,6 @@
+@namespace xul url(https://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul);
+
+#context-selectall
+{ 
+    display: none !important; 
+}
