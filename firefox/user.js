@@ -18,6 +18,8 @@ user_pref("network.IDN_show_punycode", true);
 user_pref("keyword.enabled", true);
 user_pref("browser.search.suggest.enabled", false);
 user_pref("browser.urlbar.suggest.searches", false);
+user_pref("browser.urlbar.suggest.bookmark", false);
+user_pref("browser.urlbar.suggest.history", false);
 user_pref("browser.urlbar.oneOffSearches", false);
 
 // Don't try to guess TLDs if one isn't entered
@@ -112,22 +114,6 @@ user_pref("extensions.getAddons.showPane", false);
 
 // Hide onboarding tour (uses Google Analytics)
 user_pref("browser.onboarding.enabled", false);
-
-// Disable geolocation
-// user_pref("geo.enabled", false);
-
-// Disable WebGL
-// user_pref("webgl.disabled", true);
-
-// Disable WebRTC
-// user_pref("media.peerconnection.enabled", false);
-// user_pref("media.peerconnection.video.enabled", false);
-// user_pref("media.peerconnection.identity.enabled", false);
-// user_pref("media.navigator.enabled", false);
-// user_pref("media.navigator.video.enabled", false)
-
-// Make sure DNS is sent through the proxy server when using a SOCKS v5 proxy
-// user_pref("network.proxy.socks_remote_dns", true);
 
 // Disable Notifications API.
 user_pref("dom.webnotifications.enabled", false);

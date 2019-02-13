@@ -64,13 +64,6 @@ function Empty-RecycleBin {
     $RecBin.Items() | %{Remove-Item $_.Path -Recurse -Confirm:$false}
 }
 
-# Sound Volume
-function Get-SoundVolume { [math]::Round([Audio]::Volume * 100) }
-function Set-SoundVolume([Parameter(mandatory=$true)][Int32] $Volume) { [Audio]::Volume = ($Volume / 100) }
-function Set-SoundMute { [Audio]::Mute = $true }
-function Set-SoundUnmute { [Audio]::Mute = $false }
-
-
 ### File System functions
 ### ----------------------------
 # Create a new directory and enter it
@@ -84,11 +77,6 @@ function Get-DiskUsage([string] $path=(Get-Location).Path) {
             | Measure-Object -property length -sum -ErrorAction SilentlyContinue
         ).Sum `
         1
-}
-
-# Cleanup all disks (Based on Registry Settings in `windows.ps1`)
-function Clean-Disks {
-    Start-Process "$(Join-Path $env:WinDir 'system32\cleanmgr.exe')" -ArgumentList "/sagerun:6174" -Verb "runAs"
 }
 
 ### Environment functions
@@ -138,81 +126,5 @@ function Convert-ToDiskSize {
             return "${bytes}${size}"
         }
         else { $bytes /= 1KB }
-    }
-}
-
-# Start IIS Express Server with an optional path and port
-function Start-IISExpress {
-    [CmdletBinding()]
-    param (
-        [String] $path = (Get-Location).Path,
-        [Int32]  $port = 3000
-    )
-
-    if ((Test-Path "${env:ProgramFiles}\IIS Express\iisexpress.exe") -or (Test-Path "${env:ProgramFiles(x86)}\IIS Express\iisexpress.exe")) {
-        $iisExpress = Resolve-Path "${env:ProgramFiles}\IIS Express\iisexpress.exe" -ErrorAction SilentlyContinue
-        if ($iisExpress -eq $null) { $iisExpress = Get-Item "${env:ProgramFiles(x86)}\IIS Express\iisexpress.exe" }
-
-        & $iisExpress @("/path:${path}") /port:$port
-    } else { Write-Warning "Unable to find iisexpress.exe"}
-}
-
-# Extract a .zip file
-function Unzip-File {
-    <#
-    .SYNOPSIS
-       Extracts the contents of a zip file.
-    .DESCRIPTION
-       Extracts the contents of a zip file specified via the -File parameter to the
-    location specified via the -Destination parameter.
-    .PARAMETER File
-        The zip file to extract. This can be an absolute or relative path.
-    .PARAMETER Destination
-        The destination folder to extract the contents of the zip file to.
-    .PARAMETER ForceCOM
-        Switch parameter to force the use of COM for the extraction even if the .NET Framework 4.5 is present.
-    .EXAMPLE
-       Unzip-File -File archive.zip -Destination .\d
-    .EXAMPLE
-       'archive.zip' | Unzip-File
-    .EXAMPLE
-        Get-ChildItem -Path C:\zipfiles | ForEach-Object {$_.fullname | Unzip-File -Destination C:\databases}
-    .INPUTS
-       String
-    .OUTPUTS
-       None
-    .NOTES
-       Inspired by:  Mike F Robbins, @mikefrobbins
-       This function first checks to see if the .NET Framework 4.5 is installed and uses it for the unzipping process, otherwise COM is used.
-    #>
-    [CmdletBinding()]
-    param (
-        [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
-        [string]$File,
-
-        [ValidateNotNullOrEmpty()]
-        [string]$Destination = (Get-Location).Path
-    )
-
-    $filePath = Resolve-Path $File
-    $destinationPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($Destination)
-
-    if (($PSVersionTable.PSVersion.Major -ge 3) -and
-       ((Get-ItemProperty -Path "HKLM:\Software\Microsoft\NET Framework Setup\NDP\v4\Full" -ErrorAction SilentlyContinue).Version -like "4.5*" -or
-       (Get-ItemProperty -Path "HKLM:\Software\Microsoft\NET Framework Setup\NDP\v4\Client" -ErrorAction SilentlyContinue).Version -like "4.5*")) {
-
-        try {
-            [System.Reflection.Assembly]::LoadWithPartialName("System.IO.Compression.FileSystem") | Out-Null
-            [System.IO.Compression.ZipFile]::ExtractToDirectory("$filePath", "$destinationPath")
-        } catch {
-            Write-Warning -Message "Unexpected Error. Error details: $_.Exception.Message"
-        }
-    } else {
-        try {
-            $shell = New-Object -ComObject Shell.Application
-            $shell.Namespace($destinationPath).copyhere(($shell.NameSpace($filePath)).items())
-        } catch {
-            Write-Warning -Message "Unexpected Error. Error details: $_.Exception.Message"
-        }
     }
 }
