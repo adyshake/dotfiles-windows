@@ -83,6 +83,9 @@ user_pref("browser.newtabpage.activity-stream.feeds.snippets", false);
 //   Privacy
 ////////////////////////////////////////////////////
 
+// Disable screenshots
+user_pref("extensions.screenshots.disabled", true);
+
 // Disable privacy items in Windows Taskbar Jump List.
 user_pref("browser.taskbar.lists.frequent.enabled", false);
 user_pref("browser.taskbar.lists.recent.enabled", false);
