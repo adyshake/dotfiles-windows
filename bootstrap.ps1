@@ -14,12 +14,16 @@ if (!(Verify-Elevated)) {
 
 $profileDirPath = Split-Path -parent $profile
 $componentDirPath = Join-Path $profileDirPath "components"
+$vimDirPath = Join-Path $home "vimfiles"
+$vimLinkDirPath = Join-Path $home ".vim"
 $winDirPath = Join-Path $env:WINDIR "System32"
 $firefoxDirPath = Join-Path $env:APPDATA "\Mozilla\Firefox\Profiles\*.default"
 $firefoxDir = Get-ChildItem $firefoxDirPath -ErrorAction SilentlyContinue
 
 New-Item $profileDirPath -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
 New-Item $componentDirPath -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
+New-Item $vimDirPath -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
+New-Item -Path $vimLinkDirPath -ItemType SymbolicLink -Value $vimDirPath -Force -ErrorAction SilentlyContinue | Out-Null
 
 Copy-Item -Path ./*.ps1 -Destination $profileDirPath -Force -Exclude "bootstrap.ps1"
 Write-Host  "Copied all profiles"
@@ -39,6 +43,8 @@ Copy-Item -Path ./home/** -Destination $home -Force -Include **
 Write-Host  "Copied home"
 Copy-Item -Path ./appdata/** -Destination $env:APPDATA -Include ** -Force -Recurse
 Write-Host  "Copied appdata"
+Copy-Item -Path ./vim/** -Destination $vimDirPath -Include ** -Force -Recurse
+Write-Host  "Copied vim dotfiles"
 if($null -eq $firefoxDir) {
     Write-Host "Skipping Firefox config because it is not installed" -ForegroundColor Red
 }
