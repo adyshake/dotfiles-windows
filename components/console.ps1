@@ -87,7 +87,7 @@ function Reset-PowerShellShortcut {
     if (!(Test-Path $Path)) { Return }
 
     if (Test-Path $Path -PathType Container) {
-        Get-ChildItem $Path | ForEach {
+        Get-ChildItem $Path | ForEach-Object {
             Reset-PowerShellShortcut $_.FullName
         }
         Return
@@ -150,7 +150,7 @@ function Reset-AllPowerShellShortcuts {
         "$ENV:USERPROFILE\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\StartMenu",`
         "$ENV:USERPROFILE\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar",`
         "$ENV:USERPROFILE\AppData\Roaming\Microsoft\Windows\Start Menu\Programs"`
-    ) | ForEach { Reset-PowerShellShortcut $_ }
+    ) | ForEach-Object { Reset-PowerShellShortcut $_ }
 }
 
 function Reset-AllBashShortcuts {
@@ -159,7 +159,7 @@ function Reset-AllBashShortcuts {
         "$ENV:USERPROFILE\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\StartMenu",`
         "$ENV:USERPROFILE\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar",`
         "$ENV:USERPROFILE\AppData\Roaming\Microsoft\Windows\Start Menu\Programs"`
-    ) | ForEach { Reset-BashShortcut $_ }
+    ) | ForEach-Object { Reset-BashShortcut $_ }
 }
 
 function Convert-ConsoleColor {
@@ -181,8 +181,7 @@ function Convert-ConsoleColor {
 
 $PSReadLineRegistry = Get-ItemProperty 'HKCU:\Console\PSReadLine' -ErrorAction SilentlyContinue
 
-If ((Get-Module -Name PSReadline).Version.Major -ge 2) {
-    $Colors = @{
+$Colors = @{
         "Comment"            = [ConsoleColor]$PSReadLineRegistry.CommentForeground
         "Keyword"            = [ConsoleColor]$PSReadLineRegistry.KeywordForeground
         "String"             = [ConsoleColor]$PSReadLineRegistry.StringForeground
@@ -200,21 +199,6 @@ If ((Get-Module -Name PSReadline).Version.Major -ge 2) {
     #   "DefaultToken"       = [ConsoleColor]::Black
     #   "Selection"          = [ConsoleColor]::Red
     }
-    Set-PSReadlineOption -Colors $Colors
-  } Else {
-    Set-PSReadlineOption -TokenKind Comment   -ForegroundColor ($PSReadLineRegistry.CommentForeground  , "DarkGreen" -ne $null)[0]
-    Set-PSReadlineOption -TokenKind Keyword   -ForegroundColor ($PSReadLineRegistry.KeywordForeground  , "Green"     -ne $null)[0]
-    Set-PSReadlineOption -TokenKind String    -ForegroundColor ($PSReadLineRegistry.StringForeground   , "DarkCyan"  -ne $null)[0]
-    Set-PSReadlineOption -TokenKind Operator  -ForegroundColor ($PSReadLineRegistry.OperatorForeground , "DarkGray"  -ne $null)[0]
-    Set-PSReadlineOption -TokenKind Variable  -ForegroundColor ($PSReadLineRegistry.VariableForeground , "Green"     -ne $null)[0]
-    Set-PSReadlineOption -TokenKind Command   -ForegroundColor ($PSReadLineRegistry.CommandForeground  , "Yellow"    -ne $null)[0]
-    Set-PSReadlineOption -TokenKind Parameter -ForegroundColor ($PSReadLineRegistry.ParameterForeground, "DarkGray"  -ne $null)[0]
-    Set-PSReadlineOption -TokenKind Type      -ForegroundColor ($PSReadLineRegistry.TypeForeground     , "Gray"      -ne $null)[0]
-    Set-PSReadlineOption -TokenKind Number    -ForegroundColor ($PSReadLineRegistry.NumberForeground   , "White"     -ne $null)[0]
-    Set-PSReadlineOption -TokenKind Member    -ForegroundColor ($PSReadLineRegistry.MemberForeground   , "Gray"      -ne $null)[0]
-    Set-PSReadlineOption -TokenKind None      -ForegroundColor ($PSReadLineRegistry.NormalForeground   , "$([System.Console]::ForegroundColor)" -ne $null)[0]
-    Set-PSReadlineOption -EmphasisForegroundColor              ($PSReadLineRegistry.EmphasisForeground , "Cyan" -ne $null)[0]
-    Set-PSReadlineOption -ErrorForegroundColor                 ($PSReadLineRegistry.ErrorForeground    , "Red"  -ne $null)[0]
-  }
+Set-PSReadlineOption -Colors $Colors
 
 Remove-Variable PSReadLineRegistry
