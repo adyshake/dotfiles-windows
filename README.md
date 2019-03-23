@@ -4,26 +4,18 @@ A collection of PowerShell files for Windows, including common application insta
 
 ## Installation
 
+> **Note:** You must have your execution policy set to unrestricted (or at least in bypass) for this to work. To set this, run `Set-ExecutionPolicy Unrestricted` from a PowerShell running as Administrator.
+
 ### Using Git and the bootstrap script
 
-You can clone the repository wherever you want. (I like to keep it in `~\Projects\dotfiles-windows`.) The bootstrapper script will copy the files to your PowerShell Profile folder.
+You can clone the repository wherever you want. The bootstrapper script will copy the files to your PowerShell Profile folder.
 
 From PowerShell:
 ```posh
 git clone https://github.com/adyshake/dotfiles-windows.git; cd dotfiles-windows; . .\bootstrap.ps1
 ```
 
-To update your settings, `cd` into your local `dotfiles-windows` repository within PowerShell and then:
-
-```posh
-. .\bootstrap.ps1
-```
-
-Note: You must have your execution policy set to unrestricted (or at least in bypass) for this to work: `Set-ExecutionPolicy Unrestricted`.
-
 ### Git-free install
-
-> **Note:** You must have your execution policy set to unrestricted (or at least in bypass) for this to work. To set this, run `Set-ExecutionPolicy Unrestricted` from a PowerShell running as Administrator.
 
 To install these dotfiles from PowerShell without Git:
 
@@ -49,10 +41,7 @@ When setting up a new Windows box, you may want to install some common packages,
 .\deps.ps1
 ```
 
-> The scripts will install Chocolatey, node.js, and WebPI if necessary.
-
-> **Visual Studio Extensions**  
-> Extensions will be installed into your most current version of Visual Studio. You can also install additional plugins at any time via `Install-VSExtension $url`. The Url can be found on the gallery; it's the extension's `Download` link url.
+> The scripts will install Chocolatey & scoop if necessary.
 
 ## Thanks to…
 
