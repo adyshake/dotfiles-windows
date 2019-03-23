@@ -35,9 +35,9 @@ Copy-Item -Path ./scripts -Destination $profileDirPath -Force -Include ** -Recur
 Write-Host  "Copied scripts"
 Copy-Item -Path ./utils -Destination $profileDirPath -Force -Include ** -Recurse
 Write-Host  "Copied utils"
-Copy-Item -Path ./components -Destination $profileDirPath -Force -Include **
+Copy-Item -Path ./components -Destination $profileDirPath -Force -Include ** -Recurse
 Write-Host  "Copied components"
-Copy-Item -Path ./home/** -Destination $home -Force -Include **
+Copy-Item -Path ./home/** -Destination $home -Force -Include ** -Recurse
 Write-Host  "Copied home"
 Copy-Item -Path ./appdata/** -Destination $env:APPDATA -Include ** -Force -Recurse
 Write-Host  "Copied appdata"
@@ -58,7 +58,6 @@ Write-Host  "Wrote cmd macros registry entry"
 Remove-Variable firefoxDir
 Remove-Variable firefoxDirPath
 Remove-Variable winDirPath
-Remove-Variable componentDirPath
 Remove-Variable profileDirPath
 
 Write-Host "Copied files. Press enter to close" 
