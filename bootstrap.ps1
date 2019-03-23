@@ -13,7 +13,6 @@ if (!(Verify-Elevated)) {
  }
 
 $profileDirPath = Split-Path -parent $profile
-$componentDirPath = Join-Path $profileDirPath "components"
 $vimDirPath = Join-Path $home "vimfiles"
 $vimLinkDirPath = Join-Path $home ".vim"
 $winDirPath = Join-Path $env:WINDIR "System32"
@@ -21,7 +20,6 @@ $firefoxDirPath = Join-Path $env:APPDATA "\Mozilla\Firefox\Profiles\*.default"
 $firefoxDir = Get-ChildItem $firefoxDirPath -ErrorAction SilentlyContinue
 
 New-Item $profileDirPath -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
-New-Item $componentDirPath -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
 New-Item $vimDirPath -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
 New-Item -Path $vimLinkDirPath -ItemType SymbolicLink -Value $vimDirPath -Force -ErrorAction SilentlyContinue | Out-Null
 
@@ -33,11 +31,11 @@ Copy-Item -Path ./macros.doskey -Destination $profileDirPath -Force
 Write-Host  "Copied cmd macros"
 Copy-Item -Path ./fonts -Destination $profileDirPath -Force -Recurse
 Write-Host  "Copied fonts"
-Copy-Item -Path ./scripts/** -Destination $profileDirPath -Force -Include ** -Recurse
+Copy-Item -Path ./scripts -Destination $profileDirPath -Force -Include ** -Recurse
 Write-Host  "Copied scripts"
-Copy-Item -Path ./utils/** -Destination $profileDirPath -Force -Include ** -Recurse
+Copy-Item -Path ./utils -Destination $profileDirPath -Force -Include ** -Recurse
 Write-Host  "Copied utils"
-Copy-Item -Path ./components/** -Destination $componentDirPath -Force -Include **
+Copy-Item -Path ./components -Destination $profileDirPath -Force -Include **
 Write-Host  "Copied components"
 Copy-Item -Path ./home/** -Destination $home -Force -Include **
 Write-Host  "Copied home"
