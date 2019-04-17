@@ -181,24 +181,26 @@ function Convert-ConsoleColor {
 
 $PSReadLineRegistry = Get-ItemProperty 'HKCU:\Console\PSReadLine' -ErrorAction SilentlyContinue
 
-$Colors = @{
-        "Comment"            = [ConsoleColor]$PSReadLineRegistry.CommentForeground
-        "Keyword"            = [ConsoleColor]$PSReadLineRegistry.KeywordForeground
-        "String"             = [ConsoleColor]$PSReadLineRegistry.StringForeground
-        "Operator"           = [ConsoleColor]$PSReadLineRegistry.OperatorForeground
-        "Variable"           = [ConsoleColor]$PSReadLineRegistry.VariableForeground
-        "Command"            = [ConsoleColor]$PSReadLineRegistry.CommandForeground
-        "Parameter"          = [ConsoleColor]$PSReadLineRegistry.ParameterForeground
-        "Type"               = [ConsoleColor]$PSReadLineRegistry.TypeForeground
-        "Number"             = [ConsoleColor]$PSReadLineRegistry.NumberForeground
-        "Member"             = [ConsoleColor]$PSReadLineRegistry.MemberForeground
-        "None"               = [ConsoleColor]$PSReadLineRegistry.NormalForeground
-        "Emphasis"           = [ConsoleColor]$PSReadLineRegistry.EmphasisForeground
-        "Error"              = [ConsoleColor]$PSReadLineRegistry.ErrorForeground
-    #   "ContinuationPrompt" = [ConsoleColor]::Gray
-    #   "DefaultToken"       = [ConsoleColor]::Black
-    #   "Selection"          = [ConsoleColor]::Red
-    }
-Set-PSReadlineOption -Colors $Colors
+if($null -ne $PSReadLineRegistry) {
+    $Colors = @{
+            "Comment"            = [ConsoleColor]$PSReadLineRegistry.CommentForeground
+            "Keyword"            = [ConsoleColor]$PSReadLineRegistry.KeywordForeground
+            "String"             = [ConsoleColor]$PSReadLineRegistry.StringForeground
+            "Operator"           = [ConsoleColor]$PSReadLineRegistry.OperatorForeground
+            "Variable"           = [ConsoleColor]$PSReadLineRegistry.VariableForeground
+            "Command"            = [ConsoleColor]$PSReadLineRegistry.CommandForeground
+            "Parameter"          = [ConsoleColor]$PSReadLineRegistry.ParameterForeground
+            "Type"               = [ConsoleColor]$PSReadLineRegistry.TypeForeground
+            "Number"             = [ConsoleColor]$PSReadLineRegistry.NumberForeground
+            "Member"             = [ConsoleColor]$PSReadLineRegistry.MemberForeground
+            "None"               = [ConsoleColor]$PSReadLineRegistry.NormalForeground
+            "Emphasis"           = [ConsoleColor]$PSReadLineRegistry.EmphasisForeground
+            "Error"              = [ConsoleColor]$PSReadLineRegistry.ErrorForeground
+        #   "ContinuationPrompt" = [ConsoleColor]::Gray
+        #   "DefaultToken"       = [ConsoleColor]::Black
+        #   "Selection"          = [ConsoleColor]::Red
+        }
+    Set-PSReadlineOption -Colors $Colors
+}
 
 Remove-Variable PSReadLineRegistry

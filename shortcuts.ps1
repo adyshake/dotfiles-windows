@@ -1,4 +1,5 @@
 # Unpin everything from the start menu
+# TODO - This doesn't unpin everything
 $startMenuItems = (New-Object -Com Shell.Application).NameSpace('shell:::{4234d49b-0245-4df3-b780-3893943456e1}').Items()
 ForEach ($item in $startMenuItems) {
     $item.Verbs() | Where-Object {$_.Name.replace('&','') -match 'Unpin from Start'} | ForEach-Object {$_.DoIt()}
@@ -10,10 +11,6 @@ Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskb
 Remove-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" "FavoritesResolve"
 Stop-Process -ProcessName Explorer
 
-# Pin Home folder and Projects folder to Quick Access 
-$shell = New-Object -Com "Shell.Application"  
-$projectFolder = Join-Path $env:USERPROFILE "Projects"
-New-Item $projectFolder -ItemType Directory -Force -ErrorAction SilentlyContinue
-
+# Pin Home folder to Quick Access 
+$shell = New-Object -Com "Shell.Application"
 $shell.Namespace("$env:USERPROFILE").Self.InvokeVerb("pintohome")
-$shell.Namespace("$projectFolder").Self.InvokeVerb("pintohome")

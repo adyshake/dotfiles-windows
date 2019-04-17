@@ -218,8 +218,8 @@ Set-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows\Windows Search" "All
 # Sync Settings: Disable automatically syncing settings with other Windows 10 devices
 # Theme
 Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Personalization" "Enabled" 0
-# Internet Explorer
-Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\SettingSync\Groups\BrowserSettings" "Enabled" 0
+# Internet Explorer - Removed in 1809
+#Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\SettingSync\Groups\BrowserSettings" "Enabled" 0
 # Passwords
 Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Credentials" "Enabled" 0
 # Language
@@ -273,6 +273,18 @@ Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.Wi
 # Uninstall Candy Crush Soda Saga
 Get-AppxPackage "king.com.CandyCrushSodaSaga" -AllUsers | Remove-AppxPackage
 Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "king.com.CandyCrushSodaSaga" | Remove-AppxProvisionedPackage -Online
+
+# Uninstall Candy Crush Friends
+Get-AppxPackage "king.com.CandyCrushFriends" -AllUsers | Remove-AppxPackage
+Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "king.com.CandyCrushFriends" | Remove-AppxProvisionedPackage -Online
+
+# Uninstall Candy Crush Saga
+Get-AppxPackage "king.com.CandyCrushSaga" -AllUsers | Remove-AppxPackage
+Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "king.com.CandyCrushSaga" | Remove-AppxProvisionedPackage -Online
+
+# Uninstall Cooking Fever
+Get-AppxPackage "NORDCURRENT.COOKINGFEVER" -AllUsers | Remove-AppxPackage
+Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "NORDCURRENT.COOKINGFEVER" | Remove-AppxProvisionedPackage -Online
 
 # Uninstall Disney Magic Kingdoms
 Get-AppxPackage "*.DisneyMagicKingdoms" -AllUsers | Remove-AppxPackage
@@ -359,8 +371,8 @@ Get-AppxPackage "*.Twitter" -AllUsers | Remove-AppxPackage
 Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "*.Twitter" | Remove-AppxProvisionedPackage -Online
 
 # Uninstall Voice Recorder
-#Get-AppxPackage "Microsoft.WindowsSoundRecorder" -AllUsers | Remove-AppxPackage
-#Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.WindowsSoundRecorder" | Remove-AppxProvisionedPackage -Online
+Get-AppxPackage "Microsoft.WindowsSoundRecorder" -AllUsers | Remove-AppxPackage
+Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.WindowsSoundRecorder" | Remove-AppxProvisionedPackage -Online
 
 # Uninstall Windows Phone Companion
 Get-AppxPackage "Microsoft.WindowsPhone" -AllUsers | Remove-AppxPackage
@@ -520,8 +532,12 @@ $fontCSIDL = 0x14
 $objShell = New-Object -ComObject Shell.Application
 $objFolder = $objShell.Namespace($fontCSIDL)
 $fontPath = Join-Path (Split-Path -parent $profile) "fonts\*.ttf"
-Get-ChildItem $fontPath | ForEach-Object{ $objFolder.CopyHere($_.FullName) }
-
+Get-ChildItem $fontPath | ForEach-Object {
+    if ((Test-Path "$($env:LOCALAPPDATA)\Microsoft\Windows\Fonts\$($_.Name)") -eq $False)
+    {
+        $objFolder.CopyHere($_.FullName) 
+    }
+}
 Remove-Variable fontPath
 Remove-Variable objFolder
 Remove-Variable objShell
