@@ -10,7 +10,7 @@ function Verify-Elevated {
 if (!(Verify-Elevated)) {
     Start-Process powershell -Verb runAs -ArgumentList @("-NoExit", "-Command `"cd `'$(([string](Get-Location)).TrimEnd('\'))`'; $($myInvocation.MyCommand.Definition)`"")
     exit
- }
+}
 
 $profileDirPath = Split-Path -parent $profile
 $vimDirPath = Join-Path $home "vimfiles"
@@ -23,16 +23,30 @@ New-Item $profileDirPath -ItemType Directory -Force -ErrorAction SilentlyContinu
 New-Item $vimDirPath -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
 New-Item -Path $vimLinkDirPath -ItemType SymbolicLink -Value $vimDirPath -Force -ErrorAction SilentlyContinue | Out-Null
 
+#TODO - Remove old profiles
+#TODO - Remove psh64
+#TODO - Remove hosts
+#TODO - Remove home
+#TODO - Remove appdata
+#TODO - Remove vim
+#TODO - Remove firefox
+
 Copy-Item -Path ./*.ps1 -Destination $profileDirPath -Force -Exclude "bootstrap.ps1"
 Write-Host  "Copied all profiles"
-Copy-Item -Path ./psh64.exe -Destination $winDirPath/psh.exe -Force
+if ([Environment]::Is64BitOperatingSystem -eq $True) {
+    Copy-Item -Path ./psh64.exe -Destination $winDirPath/psh.exe -Force
+} else {
+    Copy-Item -Path ./psh32.exe -Destination $winDirPath/psh.exe -Force
+}
 Write-Host  "Copied psh.exe"
 Copy-Item -Path ./macros.doskey -Destination $profileDirPath -Force
 Write-Host  "Copied cmd macros"
+Copy-Item -Path ./hosts -Destination $env:windir\System32\drivers\etc\ -Force
+Write-Host  "Copied hosts file"
 Copy-Item -Path ./fonts -Destination $profileDirPath -Force -Recurse
 Write-Host  "Copied fonts"
-Copy-Item -Path ./scripts -Destination $profileDirPath -Force -Include ** -Recurse
-Write-Host  "Copied scripts"
+Copy-Item -Path ./user_scripts -Destination $profileDirPath -Force -Include ** -Recurse
+Write-Host  "Copied user scripts"
 Copy-Item -Path ./utils -Destination $profileDirPath -Force -Include ** -Recurse
 Write-Host  "Copied utils"
 Copy-Item -Path ./components -Destination $profileDirPath -Force -Include ** -Recurse
