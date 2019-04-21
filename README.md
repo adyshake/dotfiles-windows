@@ -43,7 +43,7 @@ When setting up a new Windows box, you may want to install some common packages,
 
 > The scripts will install Chocolatey & scoop if necessary.
 
-This is to get Beeminder
+This is to get Beeminder off my ass.
 
 ## Thanks to…
 
