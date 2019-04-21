@@ -43,6 +43,8 @@ When setting up a new Windows box, you may want to install some common packages,
 
 > The scripts will install Chocolatey & scoop if necessary.
 
+This is to
+
 ## Thanks to…
 
 Jay Harris' repo [dotfiles-windows](https://github.com/jayharris/dotfiles-windows) from which this repo is based on.
