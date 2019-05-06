@@ -1,6 +1,15 @@
 call plug#begin(expand('~/.vim/bundle'))
 " Use single quotes
 
+" For showing side-by-side diff (:Gdiff)
+Plug 'tpope/vim-fugitive'
+
+" For showing +/- signs
+Plug 'airblade/vim-gitgutter'
+
+" Colorscheme
+Plug 'jez/vim-colors-solarized'
+
 Plug 'bling/vim-airline'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'vim-airline/vim-airline-themes'
@@ -24,9 +33,20 @@ let g:airline_powerline_fonts = 1
 "Display the status line always
 set laststatus=2
 
+if exists('+termguicolors')
+  " This lets us use 24-bit "true" colors in the terminal
+  set termguicolors
+endif
+
 " Colorscheme
-set t_Co=256
-colorscheme Tomorrow-Night
+
+if &t_Co > 2 || has('gui_running')
+  syntax on
+  set hlsearch
+endif
+
+colorscheme solarized
+
 if has("gui_running")
   if has("gui_gtk2")
     set guifont=Ubuntu\ Mono\ derivative\ Powerline\ Regular\ 12
@@ -43,9 +63,6 @@ set cursorline
 
 " Line numbers
 set number
-
-" Enable syntax highlighting
-syntax on
 
 " Disable annoying beeping
 set noerrorbells

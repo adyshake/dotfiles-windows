@@ -58,7 +58,4 @@ Set-Alias fs Get-DiskUsage
 # Reload the shell
 Set-Alias reload Reload-Powershell
 
-# Set GVim as default vim
-Set-Alias vim gvim
-
 Set-Alias psh New-PowershellAdmin
