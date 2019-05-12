@@ -25,25 +25,18 @@ iex ((new-object net.webclient).DownloadString('https://raw.github.com/adyshake/
 
 To update later on, just run that command again.
 
-### Sensible Windows defaults
-
-When setting up a new Windows PC, you may want to set some Windows defaults and features, such as showing hidden files in Windows Explorer and installing IIS. This will also set your machine name and full user name, so you may want to modify this file before executing.
+### After Install
+To set some Windows defaults and features, such as Explorer and privacy settings, run the following script
 
 ```post
 .\windows.ps1
 ```
 
-### Install dependencies and packages
+To install common packages, utilities and dependencies, run this script next
 
-When setting up a new Windows box, you may want to install some common packages, utilities, and dependencies. These could include node.js packages via [NPM](https://www.npmjs.org), [Chocolatey](http://chocolatey.org/) packages, Windows Features and Tools via [Web Platform Installer](https://www.microsoft.com/web/downloads/platform.aspx), and Visual Studio Extensions from the [Visual Studio Gallery](http://visualstudiogallery.msdn.microsoft.com/).
-
-```posh
+```post
 .\deps.ps1
 ```
-
-> The scripts will install Chocolatey & scoop if necessary.
-
-This is to get Beeminder off my ass.
 
 ## Thanks to…
 
