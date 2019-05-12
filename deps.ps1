@@ -36,6 +36,9 @@ if ($null -eq (which cinst)) {
     choco feature enable -n=allowGlobalConfirmation
 }
 
+choco install GoogleChrome          --limit-output	
+choco pin add --name GoogleChrome   --limit-output
+
 choco install vscode                --limit-output
 choco pin add --name vscode         --limit-output
 Refresh-Environment
@@ -45,6 +48,6 @@ choco install vlc                   --limit-output
 
 choco install qbittorrent           --limit-output
 
-choco install 7zip                 --limit-output
+choco install 7zip                  --limit-output
 
 Refresh-Environment
