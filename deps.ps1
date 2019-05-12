@@ -8,17 +8,9 @@ if (!(Verify-Elevated)) {
     exit
  }
  
-# ### Package Providers
-# Write-Host "Installing Package Providers..." -ForegroundColor "Yellow"
-# Get-PackageProvider NuGet -Force | Out-Null
-# # Chocolatey Provider is not ready yet. Use normal Chocolatey
-# #Get-PackageProvider Chocolatey -Force
-# #Set-PackageSource -Name chocolatey -Trusted
-
 ### Install PowerShell Modules
 Write-Host "Installing PowerShell Modules..." -ForegroundColor "Yellow"
 Install-Module Posh-Git -Scope CurrentUser -Force
-Install-Module PSWindowsUpdate -Scope CurrentUser -Force
 
 ### Scoop, for Command Line utilities
 Write-Host "Installing Command Line Utilities..." -ForegroundColor "Yellow"

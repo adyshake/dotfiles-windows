@@ -2,5 +2,5 @@
 # ===========
 
 Push-Location (Split-Path -parent $profile)
-"components-shell" | ForEach-Object -process {Invoke-Expression ". .\$_.ps1"}
+"components-shell", "components" | ForEach-Object -process {Invoke-Expression ". .\$_.ps1"}
 Pop-Location
