@@ -10,7 +10,12 @@ if (!(Verify-Elevated)) {
  
 ### Install PowerShell Modules
 Write-Host "Installing PowerShell Modules..." -ForegroundColor "Yellow"
-Install-Module Posh-Git -Scope CurrentUser -Force
+$installedModules = Get-InstalledModule
+if ( $installedModules.Name.Contains("posh-git") ) {
+    Write-Host "posh-git is already installed"
+} else {
+    Install-Module Posh-Git -Scope CurrentUser -Force
+}
 
 ### Scoop, for Command Line utilities
 Write-Host "Installing Command Line Utilities..." -ForegroundColor "Yellow"
@@ -36,18 +41,39 @@ if ($null -eq (which cinst)) {
     choco feature enable -n=allowGlobalConfirmation
 }
 
-choco install GoogleChrome          --limit-output	
-choco pin add --name GoogleChrome   --limit-output
+if ($null -ne (Test-Path -Path "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe")) {
+    Write-Host "Chrome is already installed"
+} else {
+    choco install GoogleChrome          --limit-output	
+    choco pin add --name GoogleChrome   --limit-output
+}
 
-choco install vscode                --limit-output
-choco pin add --name vscode         --limit-output
-Refresh-Environment
+if ($null -ne (Test-Path -Path "$env:ProgramFiles\Microsoft VS Code\code.exe")) {
+    Write-Host "VS Code is already installed"
+} else {
+    choco install vscode                --limit-output
+    choco pin add --name vscode         --limit-output
+    Refresh-Environment
+}
+
 code --install-extension stkb.rewrap
 
-choco install vlc                   --limit-output
+if ($null -ne (Test-Path -Path "$env:ProgramFiles\VideoLAN\VLC\vlc.exe")) {
+    Write-Host "VLC is already installed"
+} else {
+    choco install vlc                   --limit-output
+}
 
-choco install qbittorrent           --limit-output
+if ($null -ne (Test-Path -Path "$env:ProgramFiles\qBittorrent\qbittorrent.exe")) {
+    Write-Host "qBittorrent is already installed"
+} else {
+    choco install qbittorrent           --limit-output
+}
 
-choco install 7zip                  --limit-output
+if ($null -ne (Test-Path -Path "$env:ProgramFiles\7-Zip\7zFM.exe")) {
+    Write-Host "7zip is already installed"
+} else {
+    choco install 7zip                  --limit-output
+}
 
 Refresh-Environment
