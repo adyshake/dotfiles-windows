@@ -23,14 +23,8 @@ function System-Update() {
         Write-Host "Need to be elevated to run this command" -ForegroundColor "Yellow"
     }
     else {
-        Install-WindowsUpdate -IgnoreUserInput -IgnoreReboot -AcceptAll
         Update-Module
         scoop update
-        # Update-Help -Force
-        # gem update --system
-        # gem update
-        # npm install npm -g
-        # npm update -g
     }
 }
 

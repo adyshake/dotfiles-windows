@@ -1,6 +1,8 @@
-# Adnan Shaikh's dotfiles for Windows
+# Dotfiles for a serial yak shaver 🐑
 
-A collection of PowerShell files for Windows, including common application installation through `Chocolatey` and developer-minded Windows configuration defaults. 
+Here ye, here ye. Welcome to the repo where most of my yak shaving happens. You'll find here my very own configuration scripts for Windows. I'd like to think this would come in handy when I need to hop around various virtual machines to really speed up my workflow (10x engineers, I'm looking at you). But to be honest, this has only come in handy whenever I've wiped my system by calling a recursive ```Remove-Item``` on the root directory. You'd think after the first incident I'd have learned to use the ```-WhatIf``` switch.
+
+Having a consistent experience with Windows is difficult, even if you can manage it, it's short-lived. You can thank Microsoft's commitment to their incessant updates for that -- Not a rant but one could hope for registry keys that live longer than a year. There's a silver lining to all of this, as with all things that obey the laws of entropy, I have to keep adding to energy to the system. How else am I going to paint my GitHub tiles green so that I can delude myself into believing that I'm a _productive_ programmer.
 
 ## Installation
 

@@ -45,6 +45,8 @@ Copy-Item -Path ./hosts -Destination $env:windir\System32\drivers\etc\ -Force
 Write-Host  "Copied hosts file"
 Copy-Item -Path ./fonts -Destination $profileDirPath -Force -Recurse
 Write-Host  "Copied fonts"
+Copy-Item -Path ./dicts -Destination $profileDirPath -Force -Recurse
+Write-Host  "Copied dicts"
 Copy-Item -Path ./user_scripts -Destination $profileDirPath -Force -Include ** -Recurse
 Write-Host  "Copied user scripts"
 Copy-Item -Path ./utils -Destination $profileDirPath -Force -Include ** -Recurse
@@ -54,6 +56,8 @@ Write-Host  "Copied components"
 Copy-Item -Path ./home/** -Destination $home -Force -Include ** -Recurse
 Write-Host  "Copied home"
 Copy-Item -Path ./appdata/** -Destination $env:APPDATA -Include ** -Force -Recurse
+#TODO - Replace USER_PATH_WITH_BACKSLASHES with C:\Users\adnan
+#TODO - Replace USER_PATH_WITH_FORWARDSLASHES with C:/Users/adnan
 Write-Host  "Copied appdata"
 Copy-Item -Path ./vim/** -Destination $vimDirPath -Include ** -Force -Recurse
 Write-Host  "Copied vim dotfiles"
