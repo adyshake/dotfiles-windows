@@ -145,6 +145,10 @@ Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.Bi
 Get-AppxPackage "king.com.BubbleWitch3Saga" -AllUsers | Remove-AppxPackage
 Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "king.com.BubbleWitch3Saga" | Remove-AppxProvisionedPackage -Online
 
+# Uninstall Farm Heroes Saga
+Get-AppxPackage "king.com.FarmHeroesSaga" -AllUsers | Remove-AppxPackage
+Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "king.com.FarmHeroesSaga" | Remove-AppxProvisionedPackage -Online
+
 # Uninstall Calendar and Mail
 Get-AppxPackage "Microsoft.WindowsCommunicationsApps" -AllUsers | Remove-AppxPackage
 Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.WindowsCommunicationsApps" | Remove-AppxProvisionedPackage -Online

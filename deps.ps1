@@ -11,7 +11,7 @@ if (!(Verify-Elevated)) {
 ### Install PowerShell Modules
 Write-Host "Installing PowerShell Modules..." -ForegroundColor "Yellow"
 $installedModules = Get-InstalledModule
-if ( $installedModules.Name.Contains("posh-git") ) {
+if ( $null -ne $installedModules -and $installedModules.Name.Contains("posh-git") ) {
     Write-Host "posh-git is already installed"
 } else {
     Install-Module Posh-Git -Scope CurrentUser -Force
@@ -41,14 +41,14 @@ if ($null -eq (which cinst)) {
     choco feature enable -n=allowGlobalConfirmation
 }
 
-if ($null -ne (Test-Path -Path "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe")) {
+if ($False -ne (Test-Path -Path "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe")) {
     Write-Host "Chrome is already installed"
 } else {
     choco install GoogleChrome          --limit-output	
     choco pin add --name GoogleChrome   --limit-output
 }
 
-if ($null -ne (Test-Path -Path "$env:ProgramFiles\Microsoft VS Code\code.exe")) {
+if ($False -ne (Test-Path -Path "$env:ProgramFiles\Microsoft VS Code\code.exe")) {
     Write-Host "VS Code is already installed"
 } else {
     choco install vscode                --limit-output
@@ -58,19 +58,19 @@ if ($null -ne (Test-Path -Path "$env:ProgramFiles\Microsoft VS Code\code.exe")) 
 
 code --install-extension stkb.rewrap
 
-if ($null -ne (Test-Path -Path "$env:ProgramFiles\VideoLAN\VLC\vlc.exe")) {
+if ($False -ne (Test-Path -Path "$env:ProgramFiles\VideoLAN\VLC\vlc.exe")) {
     Write-Host "VLC is already installed"
 } else {
     choco install vlc                   --limit-output
 }
 
-if ($null -ne (Test-Path -Path "$env:ProgramFiles\qBittorrent\qbittorrent.exe")) {
+if ($False -ne (Test-Path -Path "$env:ProgramFiles\qBittorrent\qbittorrent.exe")) {
     Write-Host "qBittorrent is already installed"
 } else {
     choco install qbittorrent           --limit-output
 }
 
-if ($null -ne (Test-Path -Path "$env:ProgramFiles\7-Zip\7zFM.exe")) {
+if ($False -ne (Test-Path -Path "$env:ProgramFiles\7-Zip\7zFM.exe")) {
     Write-Host "7zip is already installed"
 } else {
     choco install 7zip                  --limit-output
