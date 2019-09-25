@@ -31,6 +31,10 @@ scoop install vim
 scoop bucket add extras
 scoop install goldendict
 
+scoop bucket add java
+scoop install adoptopenjdk-lts-hotspot
+scoop install adoptopenjdk-lts-hotspot-jre
+
 Refresh-Environment
 
 ### Chocolatey
