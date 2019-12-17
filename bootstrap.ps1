@@ -80,13 +80,13 @@ Remove-Variable profileDirPath
 
 Write-Host "Copied files"
 
-$installGPU = Read-Host -Prompt "Register Raden RX 590 GPU switcher task? (y/n)"
+$installGPU = Read-Host "Register Raden RX 590 GPU switcher task? (y/n)"
 
 if ($installGPU -eq 'y') {
     $taskName = "GPU switcher"
     $userName = $env:UserName
 
-    $password = Read-Host 'Password' -AsSecureString
+    $password = Read-Host "Password"
 
     Unregister-ScheduledTask -TaskName $taskName -Confirm:$false -Erroraction SilentlyContinue
 
