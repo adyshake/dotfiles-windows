@@ -78,5 +78,44 @@ Remove-Variable firefoxDirPath
 Remove-Variable winDirPath
 Remove-Variable profileDirPath
 
-Write-Host "Copied files. Press enter to close" 
+Write-Host "Copied files"
+
+$installGPU = Read-Host -Prompt "Register Raden RX 590 GPU switcher task? (y/n)"
+
+if ($installGPU -eq 'y') {
+    $taskName = "GPU switcher"
+    $userName = $env:UserName
+
+    $password = Read-Host 'Password' -AsSecureString
+
+    Unregister-ScheduledTask -TaskName $taskName -Confirm:$false -Erroraction SilentlyContinue
+
+    $profileDirPath = Split-Path -parent $profile
+    $gpuScript = Join-Path $profileDirPath "gpu_switcher.ps1"
+    $action = New-ScheduledTaskAction -Execute powershell.exe -Argument "`"$gpuScript`""
+    $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
+
+    Register-ScheduledTask -Action $action -TaskName $taskName -Settings $settings  -Description "Switches to the Radeon RX 590 eGPU when plugged in" -User $userName -Password $password
+
+    # Now add a special trigger to it with COM API.
+    # Get the service and task
+    $ts = New-Object -ComObject Schedule.Service
+    $ts.Connect()
+    $task = $ts.GetFolder("\").GetTask($taskName).Definition
+
+    # Create the trigger
+    $TRIGGER_TYPE_STARTUP=8
+    $startTrigger=$task.Triggers.Create($TRIGGER_TYPE_STARTUP)
+    $startTrigger.Enabled=$true
+    $startTrigger.Id="StartupTrigger"
+
+    # Re-save the task in place.
+    $TASK_CREATE_OR_UPDATE=6
+    $TASK_LOGIN_PASSWORD=1
+    $ts.GetFolder("\").RegisterTaskDefinition($taskName, $task, $TASK_CREATE_OR_UPDATE, $userName, $password, $TASK_LOGIN_PASSWORD)
+
+    Start-ScheduledTask -TaskName $taskName
+}
+
+Write-Host "Press enter to close" 
 $Host.UI.ReadLine()
