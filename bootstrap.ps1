@@ -117,5 +117,8 @@ if ($installGPU -eq 'y') {
     Start-ScheduledTask -TaskName $taskName
 }
 
+#Unblock files
+Get-ChildItem -Path $profileDirPath -Recurse | Unblock-File
+
 Write-Host "Press enter to close" 
 $Host.UI.ReadLine()
