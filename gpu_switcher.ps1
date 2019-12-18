@@ -8,10 +8,14 @@ Unregister-Event -SourceIdentifier graphicsCardChanged -ErrorAction SilentlyCont
 Register-WmiEvent -Class Win32_DeviceChangeEvent -SourceIdentifier graphicsCardChanged
 
 # Get inital eGPU state
-$GPUConnected = $false
+$GPUConnected = $null
 if ($null -ne (Get-PnpDevice | Where-Object {($_.friendlyname) -like "Radeon RX 590*" -and ($_.status) -like "Ok"})) {
     # Write-Host("eGPU is initially connected")
     $GPUConnected = $true
+}
+else {
+    Get-PnpDevice| Where-Object {$_.friendlyname -like "Intel(R) Iris(R) Plus Graphics*"} | Enable-PnpDevice -Confirm:$false
+    $GPUConnected = $false
 }
 do{
     $newEvent = Wait-Event -SourceIdentifier graphicsCardChanged
