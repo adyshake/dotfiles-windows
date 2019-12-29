@@ -7,5 +7,7 @@
     "editor.fontFamily": "'Source Code Pro', Consolas, 'Courier New', monospace",
     "editor.rulers": [80,120],
     //TODO: Turn replace username path with environment variable
-    "java.home": "C:\\users\\adnan\\scoop\\apps\\adoptopenjdk-lts-hotspot\\current"
+    "java.home": "C:\\users\\adnan\\scoop\\apps\\adoptopenjdk-lts-hotspot\\current",
+    "rewrap.autoWrap.enabled": true,
+    "latex-workshop.view.pdf.viewer": "tab"
 }

@@ -27,9 +27,13 @@ scoop install coreutils
 scoop install git
 scoop install grep
 scoop install vim
+scoop install adb
+scoop install latex
+scoop install perl
 
 scoop bucket add extras
 scoop install goldendict
+scoop install WinDirStat
 
 scoop bucket add java
 scoop install adoptopenjdk-lts-hotspot
@@ -59,6 +63,14 @@ if ($False -ne (Test-Path -Path "$env:ProgramFiles\Microsoft VS Code\code.exe"))
     Refresh-Environment
 }
 
+# Run this to list currently installed extensions
+# code --list-extensions | % { "code --install-extension $_" }
+
+code --install-extension GrapeCity.gc-excelviewer
+code --install-extension James-Yu.latex-workshop
+code --install-extension ms-python.python
+code --install-extension ms-vscode-remote.remote-wsl
+code --install-extension ms-vscode.powershell
 code --install-extension stkb.rewrap
 
 if ($False -ne (Test-Path -Path "$env:ProgramFiles\VideoLAN\VLC\vlc.exe")) {
