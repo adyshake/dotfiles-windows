@@ -50,8 +50,16 @@ Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication
 # Power: Disable Hibernation
 powercfg /hibernate off
 
-# Power: Set standby delay to 24 hours
-powercfg /change /standby-timeout-ac 1440
+# Power: Set monitor and sleep options
+powercfg /X monitor-timeout-ac 60
+powercfg /X standby-timeout-ac 0
+
+powercfg /X monitor-timeout-dc 10
+powercfg /X standby-timeout-dc 60
+
+# Power: Disable sleep on lid close
+powercfg -setacvalueindex 381b4222-f694-41f0-9685-ff5bb260df2e 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 0
+powercfg -setdcvalueindex 381b4222-f694-41f0-9685-ff5bb260df2e 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 0
 
 # SSD: Disable SuperFetch
 Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" "EnableSuperfetch" 0
@@ -108,165 +116,196 @@ Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\SettingSync\Gr
 # Other Windows Settings
 Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Windows" "Enabled" 0
 
+# Set dark theme
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" -Name "AppsUseLightTheme" -Type DWord -Value 0
+
+# Hide AMD's context menu item "AMD Radeon Software"
+If (Test-Path "Registry::HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextMenuHandlers\ACE") {
+    Remove-Item -Path "Registry::HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextMenuHandlers\ACE" -Recurse
+}
+
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\JD\10-19_Projects"
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\JD\20-29_Media"
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\JD\30-39_Documents"
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\JD\40-49_University"
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\JD\50-59_Youtube"
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\JD\60-69_Software"
+
+# Add username folder to shortcut sidebar
+$shellObject = New-Object -com shell.application
+$shellObject.Namespace("$env:USERPROFILE").Self.InvokeVerb("pintohome")
+$shellObject.Namespace("$env:USERPROFILE\JD").Self.InvokeVerb("pintohome")
+
+# Unpin all apps from the start menu
+Write-Output "Unpinning all Start Menu tiles..."
+If ([System.Environment]::OSVersion.Version.Build -ge 15063 -And [System.Environment]::OSVersion.Version.Build -le 16299) {
+    Get-ChildItem -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\CloudStore\Store\Cache\DefaultAccount" -Include "*.group" -Recurse | ForEach-Object {
+        $data = (Get-ItemProperty -Path "$($_.PsPath)\Current" -Name "Data").Data -Join ","
+        $data = $data.Substring(0, $data.IndexOf(",0,202,30") + 9) + ",0,202,80,0,0"
+        Set-ItemProperty -Path "$($_.PsPath)\Current" -Name "Data" -Type Binary -Value $data.Split(",")
+    }
+} ElseIf ([System.Environment]::OSVersion.Version.Build -ge 17134) {
+    $key = Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\CloudStore\Store\Cache\DefaultAccount\*start.tilegrid`$windows.data.curatedtilecollection.tilecollection\Current"
+    $data = $key.Data[0..25] + ([byte[]](202,50,0,226,44,1,1,0,0))
+    Set-ItemProperty -Path $key.PSPath -Name "Data" -Type Binary -Value $data
+    Stop-Process -Name "ShellExperienceHost" -Force -ErrorAction SilentlyContinue
+}
+
+# Unpin all taskbar icons
+Write-Output "Unpinning all Taskbar icons..."
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "Favorites" -Type Binary -Value ([byte[]](255))
+Remove-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" -Name "FavoritesResolve" -ErrorAction SilentlyContinue
+
+# Hide 'Recently added' list from the Start Menu
+If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer")) {
+    New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" | Out-Null
+}
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "HideRecentlyAddedApps" -Type DWord -Value 1
+
 ###############################################################################
 ### Default Windows Applications                                              #
 ###############################################################################
 Write-Host "Configuring Default Windows Applications..." -ForegroundColor "Yellow"
 
-# Uninstall 3D Builder
-Get-AppxPackage "Microsoft.3DBuilder" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.3DBuilder" | Remove-AppxProvisionedPackage -Online
+$bloatApps = @(
+    "2414FC7A.Viber",
+    "41038Axilesoft.ACGMediaPlayer",
+    "46928bounde.EclipseManager",
+    "4DF9E0F8.Netflix",
+    "64885BlueEdge.OneCalendar",
+    "7EE7776C.LinkedInforWindows",
+    "828B5831.HiddenCityMysteryofShadows",
+    "89006A2E.AutodeskSketchBook",
+    "9E2F88E3.Twitter",
+    "A278AB0D.DisneyMagicKingdoms",
+    "A278AB0D.DragonManiaLegends",
+    "A278AB0D.MarchofEmpires",
+    "ActiproSoftwareLLC.562882FEEB491",
+    "AD2F1837.GettingStartedwithWindows8",
+    "AD2F1837.HPJumpStart",
+    "AD2F1837.HPRegistration",
+    "AdobeSystemsIncorporated.AdobePhotoshopExpress",
+    "Amazon.com.Amazon",
+    "C27EB4BA.DropboxOEM",
+    "CAF9E577.Plex",
+    "CyberLinkCorp.hs.PowerMediaPlayer14forHPConsumerPC",
+    "D52A8D61.FarmVille2CountryEscape",
+    "D5EA27B7.Duolingo-LearnLanguagesforFree",
+    "DB6EA5DB.CyberLinkMediaSuiteEssentials",
+    "DolbyLaboratories.DolbyAccess",
+    "Drawboard.DrawboardPDF",
+    "Facebook.Facebook",
+    "Fitbit.FitbitCoach",
+    "flaregamesGmbH.RoyalRevolt2",
+    "GAMELOFTSA.Asphalt8Airborne",
+    "KeeperSecurityInc.Keeper",
+    "king.com.BubbleWitch3Saga",
+    "king.com.CandyCrushFriends",
+    "king.com.CandyCrushSaga",
+    "king.com.CandyCrushSodaSaga",
+    "king.com.FarmHeroesSaga",
+    "Nordcurrent.CookingFever",
+    "PandoraMediaInc.29680B314EFC2",
+    "PricelinePartnerNetwork.Booking.comBigsavingsonhot",
+    "SpotifyAB.SpotifyMusic",
+    "ThumbmunkeysLtd.PhototasticCollage",
+    "WinZipComputing.WinZipUniversal",
+    "XINGAG.XING",
 
-# Uninstall Alarms and Clock
-Get-AppxPackage "Microsoft.WindowsAlarms" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.WindowsAlarms" | Remove-AppxProvisionedPackage -Online
+    "Microsoft.3DBuilder",
+    "Microsoft.AppConnector",
+    "Microsoft.BingFinance",
+    "Microsoft.BingFoodAndDrink",
+    "Microsoft.BingHealthAndFitness",
+    "Microsoft.BingMaps",
+    "Microsoft.BingNews",
+    "Microsoft.BingSports",
+    "Microsoft.BingTranslator",
+    "Microsoft.BingTravel",
+    "Microsoft.BingWeather",
+    "Microsoft.CommsPhone",
+    "Microsoft.ConnectivityStore",
+    "Microsoft.FreshPaint",
+    "Microsoft.GetHelp",
+    "Microsoft.Getstarted",
+    "Microsoft.HelpAndTips",
+    "Microsoft.Media.PlayReadyClient.2",
+    "Microsoft.Messaging",
+    "Microsoft.Microsoft3DViewer",
+    "Microsoft.MicrosoftOfficeHub",
+    "Microsoft.MicrosoftPowerBIForWindows",
+    "Microsoft.MicrosoftSolitaireCollection",
+    "Microsoft.MinecraftUWP",
+    "Microsoft.MixedReality.Portal",
+    "Microsoft.MoCamera",
+    "Microsoft.NetworkSpeedTest",
+    "Microsoft.OfficeLens",
+    "Microsoft.Office.OneNote",
+    "Microsoft.Office.Sway",
+    "Microsoft.OneConnect",
+    "Microsoft.People",
+    "Microsoft.Print3D",
+    "Microsoft.Reader",
+    "Microsoft.SkypeApp",
+    "Microsoft.Todos",
+    "Microsoft.Wallet",
+    "Microsoft.WebMediaExtensions",
+    "Microsoft.Whiteboard",
+    "Microsoft.WindowsAlarms",
+    "microsoft.windowscommunicationsapps",
+    "Microsoft.WindowsFeedbackHub",
+    "Microsoft.WindowsMaps",
+    "Microsoft.WindowsPhone",
+    "Microsoft.WindowsReadingList",
+    "Microsoft.WindowsSoundRecorder",
+    "Microsoft.YourPhone",
+    "Microsoft.ZuneMusic",
+    "Microsoft.ZuneVideo",
+    "Microsoft.Advertising.Xaml"
+)
 
-# Uninstall Autodesk Sketchbook
-Get-AppxPackage "*.AutodeskSketchBook" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "*.AutodeskSketchBook" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Bing Finance
-Get-AppxPackage "Microsoft.BingFinance" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.BingFinance" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Bing News
-Get-AppxPackage "Microsoft.BingNews" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.BingNews" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Bing Sports
-Get-AppxPackage "Microsoft.BingSports" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.BingSports" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Bing Weather
-Get-AppxPackage "Microsoft.BingWeather" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.BingWeather" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Bubble Witch 3 Saga
-Get-AppxPackage "king.com.BubbleWitch3Saga" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "king.com.BubbleWitch3Saga" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Farm Heroes Saga
-Get-AppxPackage "king.com.FarmHeroesSaga" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "king.com.FarmHeroesSaga" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Calendar and Mail
-Get-AppxPackage "Microsoft.WindowsCommunicationsApps" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.WindowsCommunicationsApps" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Candy Crush Soda Saga
-Get-AppxPackage "king.com.CandyCrushSodaSaga" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "king.com.CandyCrushSodaSaga" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Candy Crush Friends
-Get-AppxPackage "king.com.CandyCrushFriends" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "king.com.CandyCrushFriends" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Candy Crush Saga
-Get-AppxPackage "king.com.CandyCrushSaga" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "king.com.CandyCrushSaga" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Cooking Fever
-Get-AppxPackage "NORDCURRENT.COOKINGFEVER" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "NORDCURRENT.COOKINGFEVER" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Disney Magic Kingdoms
-Get-AppxPackage "*.DisneyMagicKingdoms" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "*.DisneyMagicKingdoms" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Dolby
-Get-AppxPackage "DolbyLaboratories.DolbyAccess" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "DolbyLaboratories.DolbyAccess" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Facebook
-Get-AppxPackage "*.Facebook" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "*.Facebook" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Get Office, and it's "Get Office365" notifications
-Get-AppxPackage "Microsoft.MicrosoftOfficeHub" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.MicrosoftOfficeHub" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Get Started
-Get-AppxPackage "Microsoft.GetStarted" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.GetStarted" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Maps
-Get-AppxPackage "Microsoft.WindowsMaps" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.WindowsMaps" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall March of Empires
-Get-AppxPackage "*.MarchofEmpires" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "*.MarchofEmpires" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Messaging
-Get-AppxPackage "Microsoft.Messaging" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.Messaging" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Mobile Plans
-Get-AppxPackage "Microsoft.OneConnect" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.OneConnect" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall OneNote
-Get-AppxPackage "Microsoft.Office.OneNote" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.Office.OneNote" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall People
-Get-AppxPackage "Microsoft.People" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.People" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Print3D
-Get-AppxPackage "Microsoft.Print3D" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.Print3D" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Skype
-Get-AppxPackage "Microsoft.SkypeApp" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.SkypeApp" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall SlingTV
-Get-AppxPackage "*.SlingTV" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "*.SlingTV" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Solitaire
-Get-AppxPackage "Microsoft.MicrosoftSolitaireCollection" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.MicrosoftSolitaireCollection" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall StickyNotes
-Get-AppxPackage "Microsoft.MicrosoftStickyNotes" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.MicrosoftStickyNotes" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Sway
-Get-AppxPackage "Microsoft.Office.Sway" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.Office.Sway" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Twitter
-Get-AppxPackage "*.Twitter" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "*.Twitter" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Voice Recorder
-Get-AppxPackage "Microsoft.WindowsSoundRecorder" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.WindowsSoundRecorder" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Windows Phone Companion
-Get-AppxPackage "Microsoft.WindowsPhone" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.WindowsPhone" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall XBox
-Get-AppxPackage "Microsoft.XboxApp" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.XboxApp" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Zune Music (Groove)
-Get-AppxPackage "Microsoft.ZuneMusic" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.ZuneMusic" | Remove-AppxProvisionedPackage -Online
-
-# Uninstall Zune Video
-Get-AppxPackage "Microsoft.ZuneVideo" -AllUsers | Remove-AppxPackage
-Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "Microsoft.ZuneVideo" | Remove-AppxProvisionedPackage -Online
+foreach ($appName in $bloatApps) {
+    Get-AppxPackage $appName -AllUsers | Remove-AppxPackage
+    Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like $appName | Remove-AppxProvisionedPackage -Online
+}
 
 # Uninstall Windows Media Player
 Disable-WindowsOptionalFeature -Online -FeatureName "WindowsMediaPlayer" -NoRestart -WarningAction SilentlyContinue | Out-Null
 
-# Prevent "Suggested Applications" from returning
-if (!(Test-Path "HKLM:\Software\Policies\Microsoft\Windows\CloudContent")) {New-Item -Path "HKLM:\Software\Policies\Microsoft\Windows\CloudContent" -Type Folder | Out-Null}
-Set-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows\CloudContent" "DisableWindowsConsumerFeatures" 1
+# Disable Application suggestions and automatic installation
+Write-Output "Disabling Application suggestions..."
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "ContentDeliveryAllowed" -Type DWord -Value 0
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "OemPreInstalledAppsEnabled" -Type DWord -Value 0
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "PreInstalledAppsEnabled" -Type DWord -Value 0
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "PreInstalledAppsEverEnabled" -Type DWord -Value 0
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SilentInstalledAppsEnabled" -Type DWord -Value 0
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-310093Enabled" -Type DWord -Value 0
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-314559Enabled" -Type DWord -Value 0
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-338387Enabled" -Type DWord -Value 0
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-338388Enabled" -Type DWord -Value 0
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-338389Enabled" -Type DWord -Value 0
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-338393Enabled" -Type DWord -Value 0
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-353694Enabled" -Type DWord -Value 0
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-353696Enabled" -Type DWord -Value 0
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SubscribedContent-353698Enabled" -Type DWord -Value 0
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" -Name "SystemPaneSuggestionsEnabled" -Type DWord -Value 0
+If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent")) {
+    New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent" -Force | Out-Null
+}
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\CloudContent" -Name "DisableWindowsConsumerFeatures" -Type DWord -Value 1
+If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace")) {
+    New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace" -Force | Out-Null
+}
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace" -Name "AllowSuggestedAppsInWindowsInkWorkspace" -Type DWord -Value 0
+# Empty placeholder tile collection in registry cache and restart Start Menu process to reload the cache
+If ([System.Environment]::OSVersion.Version.Build -ge 17134) {
+    $key = Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\CloudStore\Store\Cache\DefaultAccount\*windows.data.placeholdertilecollection\Current"
+    Set-ItemProperty -Path $key.PSPath -Name "Data" -Type Binary -Value $key.Data[0..15]
+    Stop-Process -Name "ShellExperienceHost" -Force -ErrorAction SilentlyContinue
+}
+
+# Restart explorer.exe
+Stop-Process -ProcessName explorer
 
 ###############################################################################
 ### Accessibility and Ease of Use                                             #

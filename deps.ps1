@@ -79,6 +79,12 @@ if ($False -ne (Test-Path -Path "$env:ProgramFiles\VideoLAN\VLC\vlc.exe")) {
     choco install vlc                   --limit-output
 }
 
+if ($False -ne (Test-Path -Path "$env:AppData\Spotify\Spotify.exe")) {
+    Write-Host "Spotify is already installed"
+} else {
+    choco install spotify               --limit-output
+}
+
 if ($False -ne (Test-Path -Path "$env:ProgramFiles\qBittorrent\qbittorrent.exe")) {
     Write-Host "qBittorrent is already installed"
 } else {
@@ -90,5 +96,11 @@ if ($False -ne (Test-Path -Path "$env:ProgramFiles\7-Zip\7zFM.exe")) {
 } else {
     choco install 7zip                  --limit-output
 }
+
+# Pin apps to the taskbar
+Import-StartLayout -LayoutPath .\taskbar_configuration.xml -MountPath $env:SystemDrive\
+
+# Restart explorer.exe
+Stop-Process -ProcessName explorer
 
 Refresh-Environment
