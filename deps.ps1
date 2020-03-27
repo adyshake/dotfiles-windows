@@ -25,6 +25,7 @@ if ($null -eq (which scoop)) {
 
 scoop install coreutils
 scoop install git
+scoop install python
 scoop install grep
 scoop install vim
 scoop install adb

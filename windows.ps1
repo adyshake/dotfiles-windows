@@ -104,6 +104,11 @@ Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" "BingS
 # Taskbar: Disable Cortana
 Set-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows\Windows Search" "AllowCortana" 0
 
+# Disable Sticky Keys
+Set-ItemProperty -Path "HKCU:\Control Panel\Accessibility\StickyKeys" -Name "Flags" -Type String -Value "506"
+Set-ItemProperty -Path "HKCU:\Control Panel\Accessibility\ToggleKeys" -Name "Flags" -Type String -Value "58"
+Set-ItemProperty -Path "HKCU:\Control Panel\Accessibility\Keyboard Response" -Name "Flags" -Type String -Value "122"
+
 # Sync Settings: Disable automatically syncing settings with other Windows 10 devices
 # Theme
 Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\SettingSync\Groups\Personalization" "Enabled" 0
