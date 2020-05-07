@@ -2,6 +2,9 @@ dt=cd %UserProfile%\Desktop
 docs=cd %UserProfile%\Documents
 dl=cd %UserProfile%\Downloads
 ~=cd %UserProfile%
+ids=cd %UserProfile%\JD\30-39_Documents\32_Identification
+gh=cd %UserProfile%\JD\10-19_Projects\11_Github
+exp=explorer.exe .
 
 ..=cd ..
 ...=cd ..\..

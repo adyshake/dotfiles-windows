@@ -12,6 +12,9 @@ ${function:drop} = { Set-Location ~\Documents\Dropbox }
 ${function:dt} = { Set-Location ~\Desktop }
 ${function:docs} = { Set-Location ~\Documents }
 ${function:dl} = { Set-Location ~\Downloads }
+${function:ids} = { Set-Location ~\JD\30-39_Documents\32_Identification }
+${function:gh} = { Set-Location ~\JD\10-19_Projects\11_Github }
+${function:exp} = { explorer.exe . }
 
 # Correct PowerShell Aliases if tools are available (aliases win if set)
 # WGet: Use `ls.exe` if available

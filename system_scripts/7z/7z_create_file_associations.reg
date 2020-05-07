@@ -1,0 +1,52 @@
+Windows Registry Editor Version 5.00
+[HKEY_LOCAL_MACHINE\Software\Classes\7zipFILE]
+@="7-zip archive"
+"FriendlyTypeName"="7-zip archive"
+ 
+[HKEY_LOCAL_MACHINE\Software\Classes\7zipFILE\shell]
+ 
+[HKEY_LOCAL_MACHINE\Software\Classes\7zipFILE\shell\open]
+ 
+[HKEY_LOCAL_MACHINE\Software\Classes\7zipFILE\shell\open\command]
+@="\"C:\\Program Files\\7-Zip\\7zFM.exe\" \"%1\""
+ 
+[HKEY_LOCAL_MACHINE\SOFTWARE\7-Zip\Capabilities]
+"ApplicationDescription"="7-Zip archiver"
+"ApplicationIcon"="C:\\Program Files\\7-Zip\\7zFM.exe,0"
+"ApplicationName"="7-Zip"
+ 
+[HKEY_LOCAL_MACHINE\SOFTWARE\7-Zip\Capabilities\FileAssociations]
+".001"="7zipFILE"
+".arj"="7zipFILE"
+".bz2"="7zipFILE"
+".bzip2"="7zipFILE"
+".cab"="7zipFILE"
+".cpio"="7zipFILE"
+".deb"="7zipFILE"
+".dmg"="7zipFILE"
+".fat"="7zipFILE"
+".gz"="7zipFILE"
+".gzip"="7zipFILE"
+".hfs"="7zipFILE"
+".iso"="7zipFILE"
+".lha"="7zipFILE"
+".lzh"="7zipFILE"
+".lzma"="7zipFILE"
+".ntfs"="7zipFILE"
+".rar"="7zipFILE"
+".rpm"="7zipFILE"
+".swm"="7zipFILE"
+".tar"="7zipFILE"
+".tbz"="7zipFILE"
+".tbz2"="7zipFILE"
+".tgz"="7zipFILE"
+".tpz"="7zipFILE"
+".vhd"="7zipFILE"
+".wim"="7zipFILE"
+".xar"="7zipFILE"
+".xz"="7zipFILE"
+".z"="7zipFILE"
+".zip"="7zipFILE"
+ 
+[HKEY_LOCAL_MACHINE\SOFTWARE\RegisteredApplications]
+"7-Zip"="SOFTWARE\\7-Zip\\Capabilities"

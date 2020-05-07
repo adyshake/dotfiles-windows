@@ -50,6 +50,22 @@ Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Authentication
 # Power: Disable Hibernation
 powercfg /hibernate off
 
+# Set to balanced mode by default
+
+# Power: Set monitor and sleep options
+powercfg /X monitor-timeout-ac 30
+powercfg /X standby-timeout-ac 0
+
+powercfg /X monitor-timeout-dc 5
+powercfg /X standby-timeout-dc 60
+
+# Power: Disable sleep on lid close
+powercfg -setacvalueindex 381b4222-f694-41f0-9685-ff5bb260df2e 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 0
+powercfg -setdcvalueindex 381b4222-f694-41f0-9685-ff5bb260df2e 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 0
+
+# Switch to high performance power mode
+powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
+
 # Power: Set monitor and sleep options
 powercfg /X monitor-timeout-ac 60
 powercfg /X standby-timeout-ac 0
@@ -58,14 +74,29 @@ powercfg /X monitor-timeout-dc 10
 powercfg /X standby-timeout-dc 60
 
 # Power: Disable sleep on lid close
-powercfg -setacvalueindex 381b4222-f694-41f0-9685-ff5bb260df2e 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 0
-powercfg -setdcvalueindex 381b4222-f694-41f0-9685-ff5bb260df2e 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 0
+powercfg -setacvalueindex 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 0
+powercfg -setdcvalueindex 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c 4f971e89-eebd-4455-a8de-9e59040e7347 5ca83367-6e45-459f-a27b-476b1d01c936 0
+
 
 # SSD: Disable SuperFetch
 Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" "EnableSuperfetch" 0
 
 # Network: Disable WiFi Sense
 Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config" "AutoConnectAllowedOEM" 0
+
+###############################################################################
+### Windows Security                                                          #
+###############################################################################
+
+Add-MpPreference -ExclusionPath "%USERPROFILE%\.gradle"
+Add-MpPreference -ExclusionPath "%USERPROFILE%\AndroidStudioProjects\Project_Directory"
+Add-MpPreference -ExclusionPath "%USERPROFILE%\AppData\Local\Android\SDK"
+Add-MpPreference -ExclusionPath "C:\Program Files\Android\Android Studio"
+Add-MpPreference -ExclusionPath "C:\Users\adnan\JD"
+Add-MpPreference -ExclusionPath "C:\Users\adnan\scoop"
+
+# Get-MpPreference to list exclusions
+
 
 ###############################################################################
 ### Explorer, Taskbar, and System Tray                                        #
@@ -129,13 +160,6 @@ If (Test-Path "Registry::HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextM
     Remove-Item -Path "Registry::HKEY_CLASSES_ROOT\Directory\Background\shellex\ContextMenuHandlers\ACE" -Recurse
 }
 
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\JD\10-19_Projects"
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\JD\20-29_Media"
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\JD\30-39_Documents"
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\JD\40-49_University"
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\JD\50-59_Youtube"
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\JD\60-69_Software"
-
 # Add username folder to shortcut sidebar
 $shellObject = New-Object -com shell.application
 $shellObject.Namespace("$env:USERPROFILE").Self.InvokeVerb("pintohome")
@@ -166,6 +190,37 @@ If (!(Test-Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer")) {
     New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" | Out-Null
 }
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Name "HideRecentlyAddedApps" -Type DWord -Value 1
+
+###############################################################################
+### MS Office Settings                                                        #
+###############################################################################
+
+$MSWord = new-object -com word.application
+$MSWord.visible = $false
+
+$opt = $MSWord.options
+$auc = $MSWord.autoCorrect
+$auc.correctInitialCaps             = $false   #   Correct TWo INitial CApitals
+$auc.correctSentenceCaps            = $false   #   Capitalize first letter of sentences
+$auc.correctTableCells              = $false   #   Capitalize first letter of table cells
+
+$opt.ignoreInternetAndFileAddresses = $false   #   Ignore Internet and file addresses
+$opt.repeatWord                     = $true    #   Flag repeated words
+$opt.ignoreUppercase                = $false   #   Ignore words in UPPERCASE
+$opt.checkSpellingAsYouType         = $true    #   Check-spelling as you type
+$opt.checkGrammarAsYouType          = $true    #   Mark grammar errors as you type
+$opt.contextualSpeller              = $true    #   Frequently confused words
+$opt.checkGrammarWithSpelling       = $true    #   Check grammar with spelling
+
+$MSWord.quit()
+
+###############################################################################
+### File Associations                                                         #
+###############################################################################
+
+# Set 7zip as default for all archives
+reg import .\system_scripts\7z\7z_create_file_associations.reg
+.\utils\SetUserFTA.exe .\system_scripts\7z\7z_file_associations_config.txt
 
 ###############################################################################
 ### Default Windows Applications                                              #

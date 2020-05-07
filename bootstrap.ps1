@@ -12,6 +12,18 @@ if (!(Verify-Elevated)) {
     exit
 }
 
+# Create Johnny Decimal Folders
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\JD\10-19_Projects"
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\JD\10-19_Projects\11_Github"
+
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\JD\20-29_Media"
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\JD\20-29_Media\32_Identification"
+
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\JD\30-39_Documents"
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\JD\40-49_University"
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\JD\50-59_Youtube"
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\JD\60-69_Software"
+
 $profileDirPath = Split-Path -parent $profile
 $vimDirPath = Join-Path $home "vimfiles"
 $vimLinkDirPath = Join-Path $home ".vim"
