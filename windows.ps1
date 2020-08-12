@@ -94,6 +94,9 @@ Add-MpPreference -ExclusionPath "%USERPROFILE%\AppData\Local\Android\SDK"
 Add-MpPreference -ExclusionPath "C:\Program Files\Android\Android Studio"
 Add-MpPreference -ExclusionPath "C:\Users\adnan\JD"
 Add-MpPreference -ExclusionPath "C:\Users\adnan\scoop"
+Add-MpPreference -ExclusionPath "C:\Program Files\Adobe"
+Add-MpPreference -ExclusionPath "C:\Program Files (x86)\Adobe"
+Add-MpPreference -ExclusionPath "C:\Games"
 
 # Get-MpPreference to list exclusions
 
