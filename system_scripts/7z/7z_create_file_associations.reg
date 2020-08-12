@@ -47,6 +47,7 @@ Windows Registry Editor Version 5.00
 ".xz"="7zipFILE"
 ".z"="7zipFILE"
 ".zip"="7zipFILE"
+".7z"="7zipFILE"
  
 [HKEY_LOCAL_MACHINE\SOFTWARE\RegisteredApplications]
 "7-Zip"="SOFTWARE\\7-Zip\\Capabilities"

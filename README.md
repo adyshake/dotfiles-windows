@@ -27,19 +27,18 @@ iex ((new-object net.webclient).DownloadString('https://raw.github.com/adyshake/
 
 To update later on, just run that command again.
 
-### After Install
-To set some Windows defaults and features, such as Explorer and privacy settings, run the following script
-
-```post
-.\windows.ps1
-```
-
+### After Bootstrapping
 To install common packages, utilities and dependencies, run this script next
 
 ```post
 .\deps.ps1
 ```
 
+To set some Windows defaults and features, such as Explorer and privacy settings, run the following script
+
+```post
+.\windows.ps1
+```
 ## Thanks to…
 
 Jay Harris' repo [dotfiles-windows](https://github.com/jayharris/dotfiles-windows) from which this repo is based on.

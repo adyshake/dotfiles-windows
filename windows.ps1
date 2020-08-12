@@ -195,24 +195,28 @@ Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer" -Nam
 ### MS Office Settings                                                        #
 ###############################################################################
 
-$MSWord = new-object -com word.application
-$MSWord.visible = $false
-
-$opt = $MSWord.options
-$auc = $MSWord.autoCorrect
-$auc.correctInitialCaps             = $false   #   Correct TWo INitial CApitals
-$auc.correctSentenceCaps            = $false   #   Capitalize first letter of sentences
-$auc.correctTableCells              = $false   #   Capitalize first letter of table cells
-
-$opt.ignoreInternetAndFileAddresses = $false   #   Ignore Internet and file addresses
-$opt.repeatWord                     = $true    #   Flag repeated words
-$opt.ignoreUppercase                = $false   #   Ignore words in UPPERCASE
-$opt.checkSpellingAsYouType         = $true    #   Check-spelling as you type
-$opt.checkGrammarAsYouType          = $true    #   Mark grammar errors as you type
-$opt.contextualSpeller              = $true    #   Frequently confused words
-$opt.checkGrammarWithSpelling       = $true    #   Check grammar with spelling
-
-$MSWord.quit()
+If (Test-Path "HKLM:\SOFTWARE\Classes\Word.Application") {
+    $MSWord = new-object -com word.application
+    $MSWord.visible = $false
+    
+    $auc = $MSWord.autoCorrect
+    $auc.correctInitialCaps             = $false   #   Correct TWo INitial CApitals
+    $auc.correctSentenceCaps            = $false   #   Capitalize first letter of sentences
+    $auc.correctTableCells              = $false   #   Capitalize first letter of table cells
+    
+    $opt = $MSWord.options
+    $opt.ignoreInternetAndFileAddresses = $false   #   Ignore Internet and file addresses
+    $opt.repeatWord                     = $true    #   Flag repeated words
+    $opt.ignoreUppercase                = $false   #   Ignore words in UPPERCASE
+    $opt.checkSpellingAsYouType         = $true    #   Check-spelling as you type
+    $opt.checkGrammarAsYouType          = $true    #   Mark grammar errors as you type
+    $opt.contextualSpeller              = $true    #   Frequently confused words
+    $opt.checkGrammarWithSpelling       = $true    #   Check grammar with spelling
+    
+    $MSWord.quit()
+} else {
+	Write-host "Microsoft Word is not installed. Skipping MS Word Configuration"
+}
 
 ###############################################################################
 ### File Associations                                                         #

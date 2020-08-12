@@ -31,6 +31,7 @@ scoop install vim
 scoop install adb
 scoop install latex
 scoop install perl
+scoop install ffmpeg
 
 scoop bucket add extras
 scoop install goldendict
@@ -79,6 +80,10 @@ if ($False -ne (Test-Path -Path "$env:ProgramFiles\VideoLAN\VLC\vlc.exe")) {
 } else {
     choco install vlc                   --limit-output
 }
+
+# Uninstall Windows Store Spotify
+Get-AppxPackage "SpotifyAB.SpotifyMusic" -AllUsers | Remove-AppxPackage
+Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "SpotifyAB.SpotifyMusic" | Remove-AppxProvisionedPackage -Online
 
 if ($False -ne (Test-Path -Path "$env:AppData\Spotify\Spotify.exe")) {
     Write-Host "Spotify is already installed"

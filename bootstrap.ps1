@@ -80,6 +80,10 @@ else {
     Copy-Item -Path ./firefox/** -Destination $firefoxDir -Include ** -Force -Recurse
     Write-Host  "Copied Firefox config"
 }
+Copy-Item -Path ./system_scripts -Destination $profileDirPath -Force -Include ** -Recurse
+Write-Host  "Copied system scripts"
+Copy-Item -Path ./taskbar_configuration.xml -Destination $profileDirPath -Force
+Write-Host  "Copied taskbar configuration"
 
 if (!(Test-Path "HKCU:\Software\Microsoft\Command Processor")) {New-Item -Path "HKCU:\Software\Microsoft\Command Processor" -Type Folder | Out-Null}
 Set-ItemProperty "HKCU:\Software\Microsoft\Command Processor" "AutoRun" "Doskey /MacroFile=`"$profileDirPath\macros.doskey`""
