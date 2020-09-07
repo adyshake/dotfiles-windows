@@ -57,6 +57,12 @@ if ($False -ne (Test-Path -Path "${env:ProgramFiles(x86)}\Google\Chrome\Applicat
     choco pin add --name GoogleChrome   --limit-output
 }
 
+if ($False -ne (Test-Path -Path "${env:ProgramFiles}\IrfanView\i_view64.exe")) {
+    Write-Host "IrfanView is already installed"
+} else {
+    choco install irfanview             --limit-output	
+}
+
 if ($False -ne (Test-Path -Path "$env:ProgramFiles\Microsoft VS Code\code.exe")) {
     Write-Host "VS Code is already installed"
 } else {
