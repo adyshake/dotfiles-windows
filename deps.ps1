@@ -32,10 +32,14 @@ scoop install adb
 scoop install latex
 scoop install perl
 scoop install ffmpeg
+scoop install dos2unix
+scoop install nodejs
+scoop install youtube-dl
 
 scoop bucket add extras
 scoop install goldendict
 scoop install WinDirStat
+scoop install handbrake
 
 scoop bucket add java
 scoop install adoptopenjdk-lts-hotspot
@@ -76,10 +80,15 @@ if ($False -ne (Test-Path -Path "$env:ProgramFiles\Microsoft VS Code\code.exe"))
 
 code --install-extension GrapeCity.gc-excelviewer
 code --install-extension James-Yu.latex-workshop
+code --install-extension mechatroner.rainbow-csv
 code --install-extension ms-python.python
 code --install-extension ms-vscode-remote.remote-wsl
+code --install-extension ms-vscode.cpptools
 code --install-extension ms-vscode.powershell
 code --install-extension stkb.rewrap
+
+# Run this to list currently install choco apps
+# choco list -local-only
 
 if ($False -ne (Test-Path -Path "$env:ProgramFiles\VideoLAN\VLC\vlc.exe")) {
     Write-Host "VLC is already installed"
@@ -107,6 +116,12 @@ if ($False -ne (Test-Path -Path "$env:ProgramFiles\7-Zip\7zFM.exe")) {
     Write-Host "7zip is already installed"
 } else {
     choco install 7zip                  --limit-output
+}
+
+if ($False -ne (Test-Path -Path "$env:LocalAppData\Discord\app-*\Discord.exe")) {
+    Write-Host "Discord is already installed"
+} else {
+    choco install Discord               --limit-output
 }
 
 # Pin apps to the taskbar

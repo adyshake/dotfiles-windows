@@ -88,19 +88,23 @@ Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config" "Au
 ### Windows Security                                                          #
 ###############################################################################
 
-Add-MpPreference -ExclusionPath "%USERPROFILE%\.gradle"
-Add-MpPreference -ExclusionPath "%USERPROFILE%\AndroidStudioProjects\Project_Directory"
-Add-MpPreference -ExclusionPath "%USERPROFILE%\AppData\Local\Android\SDK"
-Add-MpPreference -ExclusionPath "%USERPROFILE%\JD"
-Add-MpPreference -ExclusionPath "%USERPROFILE%\scoop"
-Add-MpPreference -ExclusionPath "%USERPROFILE%\Desktop"
-Add-MpPreference -ExclusionPath "C:\Program Files\Android\Android Studio"
-Add-MpPreference -ExclusionPath "C:\Program Files\Adobe"
-Add-MpPreference -ExclusionPath "C:\Program Files (x86)\Adobe"
-Add-MpPreference -ExclusionPath "C:\Games"
+# Run this command to get all system environment variables
+# Get-ChildItem Env: | Sort-Object Name
 
 # Get-MpPreference to list exclusions
 
+Add-MpPreference -ExclusionPath "$env:HOME\.gradle"
+Add-MpPreference -ExclusionPath "$env:HOME\AndroidStudioProjects\Project_Directory"
+Add-MpPreference -ExclusionPath "$env:HOME\AppData\Local\Android\SDK"
+Add-MpPreference -ExclusionPath "$env:HOME\AppData\Local\JetBrains"
+Add-MpPreference -ExclusionPath "$env:HOME\IdeaProjects"
+Add-MpPreference -ExclusionPath "$env:HOME\JD"
+Add-MpPreference -ExclusionPath "$env:HOME\scoop"
+Add-MpPreference -ExclusionPath "$env:HOME\Desktop"
+Add-MpPreference -ExclusionPath "$env:ProgramFiles\Android\Android Studio"
+Add-MpPreference -ExclusionPath "$env:ProgramFiles\Adobe"
+Add-MpPreference -ExclusionPath "${env:ProgramFiles(x86)}\Adobe"
+Add-MpPreference -ExclusionPath "$env:SystemDrive\Games"
 
 ###############################################################################
 ### Explorer, Taskbar, and System Tray                                        #
@@ -225,6 +229,8 @@ If (Test-Path "HKLM:\SOFTWARE\Classes\Word.Application") {
 ###############################################################################
 ### File Associations                                                         #
 ###############################################################################
+
+# Run './utils/SetUserFTA.exe get' to get all file associations
 
 # Set 7zip as default for all archives
 reg import .\system_scripts\7z\7z_create_file_associations.reg
