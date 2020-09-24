@@ -40,6 +40,16 @@ scoop bucket add extras
 scoop install goldendict
 scoop install WinDirStat
 scoop install handbrake
+scoop install zeal
+
+# Install zeal docsets
+$zealPath = "$env:HOME\scoop\apps\zeal\current\docsets\"
+$docsets = @("C++", "C", "CMake", "CSS", "JavaScript", "Java_SE11", "Python_2", "Python_3", "jQuery")
+$docsets | ForEach-Object {
+    Invoke-WebRequest ("https://newyork.kapeli.com/feeds/" + $_ + ".tgz") -OutFile ($zealPath + $_ + ".tgz")
+    tar xzf ($zealPath + $_ + ".tgz") --directory $zealPath
+}
+Remove-Item (Join-Path $zealPath "*.tgz")
 
 scoop bucket add java
 scoop install adoptopenjdk-lts-hotspot
