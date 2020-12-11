@@ -23,6 +23,8 @@ user_pref("browser.urlbar.suggest.openpage", false);
 user_pref("browser.urlbar.usepreloadedtopurls.enabled", false);
 user_pref("browser.urlbar.userMadeSearchSuggestionsChoice", true);
 
+user_pref("full-screen-api.warning.timeout", 0);
+
 // Don't try to guess TLDs if one isn't entered
 user_pref("browser.fixup.alternate.enabled", false);
 
