@@ -3,7 +3,7 @@
 /****** simpleMenuWizard ******/
 
 /********************************************************
-   Modify the following files themselves to your needs.
+   Modify these files themselves to your needs.
    Do not modify the following @import block.
    ******************************************************
 /*** When right-clicking on... ***/
@@ -30,7 +30,6 @@
    Remove '/*' at the beginning of a line (not comment line) to activate the option
    Add '/*' at the beginning of the line (not comment line) to deactivate the option
    ********************************************************
-
 /*** Options ***/
 /*** If you don't use syncing: Hide all "Send to device" and sync items ***/
 /* @import url("./simpleMenuWizard/opt_noSync.css");
@@ -40,11 +39,8 @@
 
 /*** If you use uBlock Origin and want to remove all uBO context menu entries ***/
 /* @import url("./simpleMenuWizard/opt_uBO.css");
-
 /*** Hide all "Send <item> to Device" entries ***/
 /* @import url("./simpleMenuWizard/opt_noSendToDevice.css");
-
 /*** Hide all inactive menu items ***/
 /* #mainPopupSet menuitem[disabled="true"] { display: none !important; }
-
 /****** simpleMenuWizard end ******/

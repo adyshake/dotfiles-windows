@@ -64,11 +64,16 @@ if ($null -eq (which cinst)) {
     choco feature enable -n=allowGlobalConfirmation
 }
 
+if ($False -ne (Test-Path -Path "${env:ProgramFiles}\Mozilla Firefox\firefox.exe")) {
+    Write-Host "Firefox is already installed"
+} else {
+    choco install firefox               --limit-output
+}
+
 if ($False -ne (Test-Path -Path "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe")) {
     Write-Host "Chrome is already installed"
 } else {
-    choco install GoogleChrome          --limit-output	
-    choco pin add --name GoogleChrome   --limit-output
+    choco install GoogleChrome          --limit-output
 }
 
 if ($False -ne (Test-Path -Path "${env:ProgramFiles}\IrfanView\i_view64.exe")) {
@@ -81,7 +86,6 @@ if ($False -ne (Test-Path -Path "$env:ProgramFiles\Microsoft VS Code\code.exe"))
     Write-Host "VS Code is already installed"
 } else {
     choco install vscode                --limit-output
-    choco pin add --name vscode         --limit-output
     Refresh-Environment
 }
 
@@ -142,3 +146,6 @@ Import-StartLayout -LayoutPath .\taskbar_configuration.xml -MountPath $env:Syste
 Stop-Process -ProcessName explorer
 
 Refresh-Environment
+
+Remove-Item "$env:USERPROFILE\Desktop\*lnk" –Force
+

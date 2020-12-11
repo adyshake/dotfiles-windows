@@ -28,7 +28,7 @@ $profileDirPath = Split-Path -parent $profile
 $vimDirPath = Join-Path $home "vimfiles"
 $vimLinkDirPath = Join-Path $home ".vim"
 $winDirPath = Join-Path $env:WINDIR "System32"
-$firefoxDirPath = Join-Path $env:APPDATA "\Mozilla\Firefox\Profiles\*.default"
+$firefoxDirPath = Join-Path $env:APPDATA "\Mozilla\Firefox\Profiles\*.default-release"
 $firefoxDir = Get-ChildItem $firefoxDirPath -ErrorAction SilentlyContinue
 
 New-Item $profileDirPath -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
