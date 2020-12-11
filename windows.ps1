@@ -14,7 +14,7 @@ if (!(Verify-Elevated)) {
 Write-Host "Configuring System..." -ForegroundColor "Yellow"
 
 # Set Computer Name
-$computerName = Read-Host "Please name your computer (Example: Adnan-Y510P)"
+$computerName = Read-Host "Please name your computer (Example: adnan-rbs13)"
 (Get-WmiObject Win32_ComputerSystem).Rename($computerName) | Out-Null
 
 # Set DisplayName for my account. Use only if you are not using a Microsoft Account
@@ -89,6 +89,9 @@ Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config" "Au
 ###############################################################################
 
 # Disable Windows Security
+Write-Host "Please disable Tamper Protection from Windows Security within the Settings app and then press Enter to continue" -NoNewLine
+$Host.UI.ReadLine()
+
 Set-MpPreference -DisableRealtimeMonitoring $true
 Set-MpPreference -DisableEmailScanning $true
 Set-MpPreference -DisableIOAVProtection $true
@@ -97,6 +100,9 @@ Set-MpPreference -DisableCatchupFullScan $true
 Set-MpPreference -DisableBehaviorMonitoring $true
 Set-MpPreference -DisableArchiveScanning $true
 Set-MpPreference -SubmitSamplesConsent 3
+
+if (!(Test-Path "HKLM:\Software\Policies\Microsoft\Windows Defender\Real-Time Protection")) {New-Item -Path "HKLM:\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" -Type Folder | Out-Null}
+Set-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" "DisableRealtimeMonitoring" 1
 
 # Run this command to get all system environment variables
 # Get-ChildItem Env: | Sort-Object Name
