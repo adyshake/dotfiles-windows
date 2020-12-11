@@ -148,6 +148,16 @@ if ($False -ne (Test-Path -Path "$env:LocalAppData\Discord\app-*\Discord.exe")) 
     choco install Discord               --limit-output
 }
 
+choco install coretemp --limit-output
+$coretempDir = Get-ChildItem (Join-Path $env:ProgramData "\chocolatey\lib\coretemp\tools") -ErrorAction SilentlyContinue
+if($null -eq $coretempDir) {
+    Write-Host "Skipping coretemp config because it is not installed" -ForegroundColor Red
+}
+else {
+    Copy-Item -Path ./choco_data/coretemp/** -Destination $coretempDir -Include ** -Force -Recurse
+    Write-Host  "Copied coretemp config"
+}
+
 # Pin apps to the taskbar
 Import-StartLayout -LayoutPath .\taskbar_configuration.xml -MountPath $env:SystemDrive\
 
