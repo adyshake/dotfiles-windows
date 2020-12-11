@@ -28,8 +28,6 @@ $profileDirPath = Split-Path -parent $profile
 $vimDirPath = Join-Path $home "vimfiles"
 $vimLinkDirPath = Join-Path $home ".vim"
 $winDirPath = Join-Path $env:WINDIR "System32"
-$firefoxDirPath = Join-Path $env:APPDATA "\Mozilla\Firefox\Profiles\*.default-release"
-$firefoxDir = Get-ChildItem $firefoxDirPath -ErrorAction SilentlyContinue
 
 New-Item $profileDirPath -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
 New-Item $vimDirPath -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
@@ -73,13 +71,6 @@ Copy-Item -Path ./appdata/** -Destination $env:APPDATA -Include ** -Force -Recur
 Write-Host  "Copied appdata"
 Copy-Item -Path ./vim/** -Destination $vimDirPath -Include ** -Force -Recurse
 Write-Host  "Copied vim dotfiles"
-if($null -eq $firefoxDir) {
-    Write-Host "Skipping Firefox config because it is not installed" -ForegroundColor Red
-}
-else {
-    Copy-Item -Path ./firefox/** -Destination $firefoxDir -Include ** -Force -Recurse
-    Write-Host  "Copied Firefox config"
-}
 Copy-Item -Path ./system_scripts -Destination $profileDirPath -Force -Include ** -Recurse
 Write-Host  "Copied system scripts"
 Copy-Item -Path ./taskbar_configuration.xml -Destination $profileDirPath -Force

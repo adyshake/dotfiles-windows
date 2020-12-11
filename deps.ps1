@@ -68,6 +68,15 @@ if ($False -ne (Test-Path -Path "${env:ProgramFiles}\Mozilla Firefox\firefox.exe
     Write-Host "Firefox is already installed"
 } else {
     choco install firefox               --limit-output
+    $firefoxDirPath = Join-Path $env:APPDATA "\Mozilla\Firefox\Profiles\*.default-release"
+    $firefoxDir = Get-ChildItem $firefoxDirPath -ErrorAction SilentlyContinue
+    if($null -eq $firefoxDir) {
+        Write-Host "Skipping Firefox config because it is not installed" -ForegroundColor Red
+    }
+    else {
+        Copy-Item -Path ./firefox/** -Destination $firefoxDir -Include ** -Force -Recurse
+        Write-Host  "Copied Firefox config"
+    }
 }
 
 if ($False -ne (Test-Path -Path "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe")) {
