@@ -35,6 +35,7 @@ scoop install ffmpeg
 scoop install dos2unix
 scoop install nodejs
 scoop install youtube-dl
+scoop install sqlite
 
 scoop bucket add extras
 scoop install goldendict
@@ -154,9 +155,13 @@ if($null -eq $coretempDir) {
     Write-Host "Skipping coretemp config because it is not installed" -ForegroundColor Red
 }
 else {
-    Copy-Item -Path ./choco_data/coretemp/** -Destination $coretempDir -Include ** -Force -Recurse
+    Copy-Item -Path ./misc_app_data/coretemp/** -Destination $coretempDir -Include ** -Force -Recurse
     Write-Host  "Copied coretemp config"
 }
+
+choco install ditto --limit-output
+# Import Ditto settings
+reg import .\misc_app_data\ditto\ditto_settings.reg
 
 # Pin apps to the taskbar
 Import-StartLayout -LayoutPath .\taskbar_configuration.xml -MountPath $env:SystemDrive\
