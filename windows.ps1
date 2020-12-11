@@ -88,6 +88,16 @@ Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config" "Au
 ### Windows Security                                                          #
 ###############################################################################
 
+# Disable Windows Security
+Set-MpPreference -DisableRealtimeMonitoring $true
+Set-MpPreference -DisableEmailScanning $true
+Set-MpPreference -DisableIOAVProtection $true
+Set-MpPreference -MAPSReporting 0
+Set-MpPreference -DisableCatchupFullScan $true
+Set-MpPreference -DisableBehaviorMonitoring $true
+Set-MpPreference -DisableArchiveScanning $true
+Set-MpPreference -SubmitSamplesConsent 3
+
 # Run this command to get all system environment variables
 # Get-ChildItem Env: | Sort-Object Name
 
