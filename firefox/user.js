@@ -10,6 +10,19 @@ user_pref("keyword.enabled", true);
 user_pref("browser.search.suggest.enabled", false);
 user_pref("browser.urlbar.suggest.searches", false);
 
+// Turn off history showing up in URL bar
+user_pref("browser.urlbar.maxHistoricalSearchSuggestions", 0);
+user_pref("browser.urlbar.autocomplete.enabled", false);
+user_pref("browser.urlbar.autoFill", false);
+user_pref("browser.urlbar.autoFill.typed", false);
+user_pref("browser.urlbar.maxRichResults", 0);
+user_pref("browser.urlbar.speculativeConnect.enabled", false);
+user_pref("browser.urlbar.suggest.bookmark", false);
+user_pref("browser.urlbar.suggest.history", false);
+user_pref("browser.urlbar.suggest.openpage", false);
+user_pref("browser.urlbar.usepreloadedtopurls.enabled", false);
+user_pref("browser.urlbar.userMadeSearchSuggestionsChoice", true);
+
 // Don't try to guess TLDs if one isn't entered
 user_pref("browser.fixup.alternate.enabled", false);
 
