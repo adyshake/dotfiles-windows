@@ -16,6 +16,11 @@ ${function:ids} = { Set-Location ~\JD\30-39_Documents\32_Identification }
 ${function:gh} = { Set-Location ~\JD\10-19_Projects\11_Github }
 ${function:exp} = { explorer.exe . }
 
+function cjd($folderName) {
+    $JDPath = Join-Path $env:USERPROFILE "\JD\*\*\$folderName"
+    Set-Location $JDPath
+}
+
 # Correct PowerShell Aliases if tools are available (aliases win if set)
 # WGet: Use `ls.exe` if available
 if (Get-Command wget.exe -ErrorAction SilentlyContinue | Test-Path) {
