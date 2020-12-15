@@ -2,6 +2,11 @@
 function which($name) { Get-Command $name -ErrorAction SilentlyContinue | Select-Object Definition }
 function touch($file) { "" | Out-File $file -Encoding ASCII }
 
+function cjd($folderName) {
+    $JDPath = Join-Path $env:USERPROFILE "\JD\*\*\$folderName*"
+    Set-Location $JDPath
+}
+
 # Common Editing needs
 function Edit-Hosts { Invoke-Expression "sudo $(if($env:EDITOR -ne $null)  {$env:EDITOR } else { 'notepad' }) $env:windir\system32\drivers\etc\hosts" }
 function Edit-Profile { Invoke-Expression "$(if($env:EDITOR -ne $null)  {$env:EDITOR } else { 'notepad' }) $profile" }
