@@ -37,6 +37,9 @@ scoop install nodejs
 scoop install youtube-dl
 scoop install sqlite
 
+# Install common python modules
+python -m pip install numpy pandas requests pillow matplotlib beautifulsoup4 scipy tqdm
+
 scoop bucket add extras
 scoop install goldendict
 scoop install WinDirStat
@@ -78,6 +81,8 @@ if ($False -ne (Test-Path -Path "${env:ProgramFiles}\Mozilla Firefox\firefox.exe
         Copy-Item -Path ./firefox/** -Destination $firefoxDir -Include ** -Force -Recurse
         Write-Host  "Copied Firefox config"
     }
+    Remove-Variable firefoxDir
+    Remove-Variable firefoxDirPath
 }
 
 if ($False -ne (Test-Path -Path "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe")) {
@@ -162,6 +167,8 @@ else {
 choco install ditto --limit-output
 # Import Ditto settings
 reg import .\misc_app_data\ditto\ditto_settings.reg
+
+choco install protonvpn --limit-output
 
 # Pin apps to the taskbar
 Import-StartLayout -LayoutPath .\taskbar_configuration.xml -MountPath $env:SystemDrive\

@@ -24,6 +24,18 @@
 @import url("./simpleMenuWizard/urlbar-context.css");     /* ...the addressbar                               */
 @import url("./simpleMenuWizard/urlbar-pageaction.css");  /* Leftclick the addressbar ellipsis (three dots)  */
 
+/* Hides the native tabs */
+#TabsToolbar {
+  visibility: collapse;
+}
+
+#titlebar {
+  visibility: collapse;
+}
+
+#sidebar-header {
+  visibility: collapse !important;
+}
 
 /**********************************************************
    How to activate or deactivate the following options:

@@ -71,8 +71,6 @@ if (!(Test-Path "HKCU:\Software\Microsoft\Command Processor")) {New-Item -Path "
 Set-ItemProperty "HKCU:\Software\Microsoft\Command Processor" "AutoRun" "Doskey /MacroFile=`"$profileDirPath\macros.doskey`""
 Write-Host  "Wrote cmd macros registry entry"
 
-Remove-Variable firefoxDir
-Remove-Variable firefoxDirPath
 Remove-Variable winDirPath
 Remove-Variable profileDirPath
 
