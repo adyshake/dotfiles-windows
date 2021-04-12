@@ -94,7 +94,9 @@ if ($False -ne (Test-Path -Path "${env:ProgramFiles(x86)}\Google\Chrome\Applicat
 if ($False -ne (Test-Path -Path "${env:ProgramFiles}\IrfanView\i_view64.exe")) {
     Write-Host "IrfanView is already installed"
 } else {
-    choco install irfanview             --limit-output	
+    choco install irfanview             --limit-output
+    choco install ghostscript           --limit-output
+    choco install irfanviewplugins      --limit-output
 }
 
 if ($False -ne (Test-Path -Path "$env:ProgramFiles\Microsoft VS Code\code.exe")) {
@@ -107,15 +109,22 @@ if ($False -ne (Test-Path -Path "$env:ProgramFiles\Microsoft VS Code\code.exe"))
 # Run this to list currently installed extensions
 # code --list-extensions | % { "code --install-extension $_" }
 
+code --install-extension ban.spellright
+code --install-extension foam.foam-vscode
 code --install-extension GrapeCity.gc-excelviewer
 code --install-extension James-Yu.latex-workshop
+code --install-extension kortina.vscode-markdown-notes
 code --install-extension mechatroner.rainbow-csv
+code --install-extension monokai.theme-monokai-pro-vscode
 code --install-extension ms-python.python
 code --install-extension ms-toolsai.jupyter
 code --install-extension ms-vscode-remote.remote-wsl
 code --install-extension ms-vscode.cpptools
 code --install-extension ms-vscode.powershell
+code --install-extension mushan.vscode-paste-image
 code --install-extension stkb.rewrap
+code --install-extension vscodevim.vim
+code --install-extension yzhang.markdown-all-in-one
 
 # Run this to list currently install choco apps
 # choco list -local-only
@@ -169,6 +178,8 @@ choco install ditto --limit-output
 reg import .\misc_app_data\ditto\ditto_settings.reg
 
 choco install protonvpn --limit-output
+
+choco install yubico-authenticator --limit-output
 
 # Pin apps to the taskbar
 Import-StartLayout -LayoutPath .\taskbar_configuration.xml -MountPath $env:SystemDrive\
