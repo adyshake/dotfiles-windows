@@ -3,8 +3,39 @@ function which($name) { Get-Command $name -ErrorAction SilentlyContinue | Select
 function touch($file) { "" | Out-File $file -Encoding ASCII }
 
 function cjd($folderName) {
-    $JDPath = Join-Path $env:USERPROFILE "\JD\*\*\$folderName*"
+    $JDPath = Join-Path $env:USERPROFILE "\JD\*\$folderName*"
+    if (-Not (Test-Path($JDPath))) {
+        if (-Not (Test-Path($JDPath))) {
+            $JDPath = Join-Path $env:USERPROFILE "\JD\*\*\$folderName*"
+            Write-Output "Couldn't resolve path"
+            return
+        }
+    }
     Set-Location $JDPath
+}
+
+function cjde($folderName) {
+    $JDPath = Join-Path $env:USERPROFILE "\JD\*\$folderName*"
+    if (-Not (Test-Path($JDPath))) {
+        $JDPath = Join-Path $env:USERPROFILE "\JD\*\*\$folderName*"
+        if (-Not (Test-Path($JDPath))) {
+            Write-Output "Couldn't resolve path"
+            return
+        }
+    }
+    Push-Location $JDPath
+    explorer.exe .
+    Pop-Location
+}
+
+function cjdls($folderName) {
+    $JDPath = Join-Path $env:USERPROFILE "\JD\"
+    Get-ChildItem $JDPath | ForEach-Object {
+        $_.Name
+        Get-ChildItem $_.FullName | ForEach-Object {
+            Write-Output "`t $_"
+        }
+    }
 }
 
 # Common Editing needs
