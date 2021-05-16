@@ -36,6 +36,7 @@ scoop install dos2unix
 scoop install nodejs
 scoop install youtube-dl
 scoop install sqlite
+scoop install jq
 
 # Install common python modules
 python -m pip install numpy pandas requests pillow matplotlib beautifulsoup4 scipy tqdm
@@ -178,8 +179,8 @@ choco install ditto --limit-output
 reg import .\misc_app_data\ditto\ditto_settings.reg
 
 choco install protonvpn --limit-output
-
 choco install yubico-authenticator --limit-output
+choco install obs-studio --limit-output
 
 # Pin apps to the taskbar
 Import-StartLayout -LayoutPath .\taskbar_configuration.xml -MountPath $env:SystemDrive\
