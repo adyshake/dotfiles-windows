@@ -89,20 +89,20 @@ Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config" "Au
 ###############################################################################
 
 # Disable Windows Security
-Write-Host "Please disable Tamper Protection from Windows Security within the Settings app and then press Enter to continue" -NoNewLine
-$Host.UI.ReadLine()
+# Write-Host "Please disable Tamper Protection from Windows Security within the Settings app and then press Enter to continue" -NoNewLine
+# $Host.UI.ReadLine()
 
-Set-MpPreference -DisableRealtimeMonitoring $true
-Set-MpPreference -DisableEmailScanning $true
-Set-MpPreference -DisableIOAVProtection $true
-Set-MpPreference -MAPSReporting 0
-Set-MpPreference -DisableCatchupFullScan $true
-Set-MpPreference -DisableBehaviorMonitoring $true
-Set-MpPreference -DisableArchiveScanning $true
-Set-MpPreference -SubmitSamplesConsent 3
+# Set-MpPreference -DisableRealtimeMonitoring $true
+# Set-MpPreference -DisableEmailScanning $true
+# Set-MpPreference -DisableIOAVProtection $true
+# Set-MpPreference -MAPSReporting 0
+# Set-MpPreference -DisableCatchupFullScan $true
+# Set-MpPreference -DisableBehaviorMonitoring $true
+# Set-MpPreference -DisableArchiveScanning $true
+# Set-MpPreference -SubmitSamplesConsent 3
 
-if (!(Test-Path "HKLM:\Software\Policies\Microsoft\Windows Defender\Real-Time Protection")) {New-Item -Path "HKLM:\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" -Type Folder | Out-Null}
-Set-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" "DisableRealtimeMonitoring" 1
+# if (!(Test-Path "HKLM:\Software\Policies\Microsoft\Windows Defender\Real-Time Protection")) {New-Item -Path "HKLM:\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" -Type Folder | Out-Null}
+# Set-ItemProperty "HKLM:\Software\Policies\Microsoft\Windows Defender\Real-Time Protection" "DisableRealtimeMonitoring" 1
 
 # Run this command to get all system environment variables
 # Get-ChildItem Env: | Sort-Object Name

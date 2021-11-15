@@ -46,6 +46,7 @@ scoop install goldendict
 scoop install WinDirStat
 scoop install handbrake
 scoop install zeal
+scoop install imagemagick
 
 # Install zeal docsets
 $zealPath = "$env:HOME\scoop\apps\zeal\current\docsets\"
@@ -57,7 +58,7 @@ $docsets | ForEach-Object {
 Remove-Item (Join-Path $zealPath "*.tgz")
 
 scoop bucket add java
-scoop install adoptopenjdk-lts-hotspot
+scoop install corretto-jdk
 
 Refresh-Environment
 
@@ -111,10 +112,8 @@ if ($False -ne (Test-Path -Path "$env:ProgramFiles\Microsoft VS Code\code.exe"))
 # code --list-extensions | % { "code --install-extension $_" }
 
 code --install-extension ban.spellright
-code --install-extension foam.foam-vscode
 code --install-extension GrapeCity.gc-excelviewer
 code --install-extension James-Yu.latex-workshop
-code --install-extension kortina.vscode-markdown-notes
 code --install-extension mechatroner.rainbow-csv
 code --install-extension monokai.theme-monokai-pro-vscode
 code --install-extension ms-python.python
@@ -122,10 +121,7 @@ code --install-extension ms-toolsai.jupyter
 code --install-extension ms-vscode-remote.remote-wsl
 code --install-extension ms-vscode.cpptools
 code --install-extension ms-vscode.powershell
-code --install-extension mushan.vscode-paste-image
 code --install-extension stkb.rewrap
-code --install-extension vscodevim.vim
-code --install-extension yzhang.markdown-all-in-one
 
 # Run this to list currently install choco apps
 # choco list -local-only
@@ -139,12 +135,6 @@ if ($False -ne (Test-Path -Path "$env:ProgramFiles\VideoLAN\VLC\vlc.exe")) {
 # Uninstall Windows Store Spotify
 Get-AppxPackage "SpotifyAB.SpotifyMusic" -AllUsers | Remove-AppxPackage
 Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "SpotifyAB.SpotifyMusic" | Remove-AppxProvisionedPackage -Online
-
-if ($False -ne (Test-Path -Path "$env:AppData\Spotify\Spotify.exe")) {
-    Write-Host "Spotify is already installed"
-} else {
-    choco install spotify               --limit-output
-}
 
 if ($False -ne (Test-Path -Path "$env:ProgramFiles\qBittorrent\qbittorrent.exe")) {
     Write-Host "qBittorrent is already installed"
@@ -190,5 +180,5 @@ Stop-Process -ProcessName explorer
 
 Refresh-Environment
 
-Remove-Item "$env:USERPROFILE\Desktop\*lnk" –Force
-
+Remove-Item "$env:USERPROFILE\Desktop\*lnk" -Force
+Remove-Item "$env:PUBLIC\Desktop\*lnk" -Force
