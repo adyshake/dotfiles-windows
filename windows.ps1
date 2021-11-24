@@ -307,6 +307,7 @@ $bloatApps = @(
     "ThumbmunkeysLtd.PhototasticCollage",
     "WinZipComputing.WinZipUniversal",
     "XINGAG.XING",
+    "Disney.37853FC22B2CE"
 
     "Microsoft.3DBuilder",
     "Microsoft.AppConnector",
