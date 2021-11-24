@@ -45,17 +45,7 @@ scoop bucket add extras
 scoop install goldendict
 scoop install WinDirStat
 scoop install handbrake
-scoop install zeal
 scoop install imagemagick
-
-# Install zeal docsets
-$zealPath = "$env:HOME\scoop\apps\zeal\current\docsets\"
-$docsets = @("C++", "C", "CMake", "CSS", "JavaScript", "Java_SE11", "Python_2", "Python_3", "jQuery")
-$docsets | ForEach-Object {
-    Invoke-WebRequest ("https://newyork.kapeli.com/feeds/" + $_ + ".tgz") -OutFile ($zealPath + $_ + ".tgz")
-    tar xzf ($zealPath + $_ + ".tgz") --directory $zealPath
-}
-Remove-Item (Join-Path $zealPath "*.tgz")
 
 scoop bucket add java
 scoop install corretto-jdk
@@ -74,6 +64,9 @@ if ($False -ne (Test-Path -Path "${env:ProgramFiles}\Mozilla Firefox\firefox.exe
     Write-Host "Firefox is already installed"
 } else {
     choco install firefox               --limit-output
+    # Launch Firefox once so that it can generate the profile directory
+    Start-Process "${env:ProgramFiles}\Mozilla Firefox\firefox.exe"
+    Start-Sleep -Seconds 5
     $firefoxDirPath = Join-Path $env:APPDATA "\Mozilla\Firefox\Profiles\*.default-release"
     $firefoxDir = Get-ChildItem $firefoxDirPath -ErrorAction SilentlyContinue
     if($null -eq $firefoxDir) {
