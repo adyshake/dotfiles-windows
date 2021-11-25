@@ -129,6 +129,12 @@ if ($False -ne (Test-Path -Path "$env:ProgramFiles\VideoLAN\VLC\vlc.exe")) {
 Get-AppxPackage "SpotifyAB.SpotifyMusic" -AllUsers | Remove-AppxPackage
 Get-AppXProvisionedPackage -Online | Where-Object DisplayNam -like "SpotifyAB.SpotifyMusic" | Remove-AppxProvisionedPackage -Online
 
+if ($False -ne (Test-Path -Path "$env:AppData\Spotify\Spotify.exe")) {
+    Write-Host "Spotify is already installed"
+} else {
+    choco install spotify               --limit-output
+}
+
 if ($False -ne (Test-Path -Path "$env:ProgramFiles\qBittorrent\qbittorrent.exe")) {
     Write-Host "qBittorrent is already installed"
 } else {
