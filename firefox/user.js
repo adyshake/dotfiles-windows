@@ -42,6 +42,9 @@ user_pref("security.insecure_connection_text.enabled", true);
 // Don't warn when opening about:config 
 user_pref("browser.aboutConfig.showWarning", false);  // for the new HTML version [FF71+]
 
+// Disable PIP
+user_pref("media.videocontrols.picture-in-picture.video-toggle.enabled", false);
+
 // When double-clicking a word on a page, only copy the word itself, not the space character next to it 
 user_pref("layout.word_select.eat_space_to_next_word", false);
 
