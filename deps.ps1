@@ -28,6 +28,8 @@ scoop install git
 scoop install python
 scoop install grep
 scoop install vim
+# Install all vim plugins
+vim +PlugInstall +qall
 scoop install adb
 scoop install latex
 scoop install perl
@@ -51,6 +53,10 @@ scoop bucket add java
 scoop install corretto-jdk
 
 Refresh-Environment
+
+python -m pip install pipx
+pipx ensurepath
+pipx install jrnl
 
 ### Chocolatey
 Write-Host "Installing Desktop Utilities..." -ForegroundColor "Yellow"
