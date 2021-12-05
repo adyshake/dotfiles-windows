@@ -58,6 +58,10 @@ python -m pip install pipx
 pipx ensurepath
 pipx install jrnl
 
+$jrnlDir = Join-Path $env:USERPROFILE "\.config\jrnl"
+New-Item $jrnlDir -ItemType Directory -Force -ErrorAction SilentlyContinue | Out-Null
+Copy-Item -Path ./misc_app_data/jrnl/** -Destination $jrnlDir -Include ** -Force -Recurse
+
 ### Chocolatey
 Write-Host "Installing Desktop Utilities..." -ForegroundColor "Yellow"
 if ($null -eq (which cinst)) {
